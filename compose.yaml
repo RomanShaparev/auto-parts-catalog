@@ -5,10 +5,7 @@ services:
       context: ./catalog-service
       dockerfile: Dockerfile
     environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: postgres
+      DATABASE_CONN_STRING: postgres://postgres:secret@postgres/postgres
     ports:
       - 8080:8080
     volumes:
