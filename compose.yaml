@@ -1,13 +1,20 @@
 services:
 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./backend:/app
+
   catalog:
     build:
       context: ./catalog-service
       dockerfile: Dockerfile
     environment:
       DATABASE_CONN_STRING: postgres://postgres:secret@postgres/postgres
-    ports:
-      - 8080:8080
     volumes:
       - ./catalog-service:/app
 
