@@ -4,6 +4,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    environment:
+      CATALOG_SERVICE_URL: catalog:50051
     ports:
       - 8080:8080
     volumes:
@@ -15,6 +17,7 @@ services:
       dockerfile: Dockerfile
     environment:
       DATABASE_CONN_STRING: postgres://postgres:secret@postgres/postgres
+      CATALOG_SERVICE_PORT: 50051
     volumes:
       - ./catalog-service:/app
 
