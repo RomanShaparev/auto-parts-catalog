@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option go_package = "auto-parts-catalog/catalog-service/catalogservice/gen";
+
+package gen;
+
+import "google/protobuf/empty.proto";
+
+service CountryService {
+  rpc CreateCountry(CreateCountryRequest) returns (Country);
+  rpc GetCountry(GetCountryRequest) returns (Country);
+  rpc ListCountries(google.protobuf.Empty) returns (ListCountriesResponse);
+  rpc DeleteCountry(DeleteCountryRequest) returns (google.protobuf.Empty);
+}
+
+message CreateCountryRequest {
+  string name = 1;
+}
+ 
+message GetCountryRequest {
+  int32 id = 1;
+}
+ 
+message ListCountriesResponse {
+  repeated Country Countries = 1;
+}
+ 
+message DeleteCountryRequest {
+  int32 id = 1;
+}
+ 
+message Country {
+  int32 id = 1;
+  string name = 2;
+}

@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"auto-parts-catalog/backend/catalogservice"
+	catalogservice "auto-parts-catalog/backend/catalogservice/gen"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -26,20 +26,20 @@ func main() {
 			log.Fatalf("did not connect: %v", err)
 		}
 		defer conn.Close()
-		c := catalogservice.NewGreeterClient(conn)
+		c := catalogservice.NewCountryServiceClient(conn)
 
 		// Contact the server and print out its response.
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 		defer cancel()
-		r, err := c.SayHello(ctx, &catalogservice.HelloRequest{Name: "world!"})
+		r, err := c.CreateCountry(ctx, &catalogservice.CreateCountryRequest{Name: "Tomsk"})
 		if err != nil {
 			log.Fatalf("could not greet: %v", err)
 		}
-		log.Printf("Greeting: %s", r.GetMessage())
+		log.Printf("Greeting: %s", r.GetName())
 
 	}
 
-	return
+	//return
 	{
 		r := chi.NewRouter()
 		r.Use(middleware.Logger)
