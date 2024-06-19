@@ -4,7 +4,7 @@ import (
 	"auto-parts-catalog/catalog-service/catalogservice"
 	"auto-parts-catalog/catalog-service/catalogservice/gen"
 	"auto-parts-catalog/catalog-service/postgres/queries"
-	"auto-parts-catalog/catalog-service/storage"
+	"auto-parts-catalog/catalog-service/storage/postgres"
 	"context"
 	"log"
 	"net"
@@ -26,7 +26,7 @@ func main() {
 	queries := queries.New(conn)
 
 	// init Storage
-	storage := storage.New(queries)
+	storage := postgres.NewStorage(queries)
 
 	// setup GRPC server
 	lis, err := net.Listen("tcp", ":"+os.Getenv("CATALOG_SERVICE_PORT"))

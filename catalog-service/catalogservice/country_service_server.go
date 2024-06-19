@@ -10,13 +10,13 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func NewCountryServiceServer(storage *storage.CountryStorage) *CountryServiceServer {
+func NewCountryServiceServer(storage storage.CountryStorage) *CountryServiceServer {
 	return &CountryServiceServer{storage: storage}
 }
 
 type CountryServiceServer struct {
 	gen.UnimplementedCountryServiceServer
-	storage *storage.CountryStorage
+	storage storage.CountryStorage
 }
 
 func newCountry(country storage.Country) *gen.Country {

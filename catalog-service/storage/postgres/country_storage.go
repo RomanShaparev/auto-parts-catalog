@@ -1,9 +1,10 @@
-package storage
+package postgres
 
 import (
 	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/mapping"
 	"auto-parts-catalog/catalog-service/postgres/queries"
+	"auto-parts-catalog/catalog-service/storage"
 	"context"
 )
 
@@ -15,39 +16,34 @@ type CountryStorage struct {
 	queries *queries.Queries
 }
 
-func newCountry(country queries.Country) Country {
-	return Country{
+func newCountry(country queries.Country) storage.Country {
+	return storage.Country{
 		Id:   country.CountryID,
 		Name: country.CountryName,
 	}
 }
 
-type Country struct {
-	Id   int32
-	Name string
-}
-
-func (s *CountryStorage) CreateCountry(ctx context.Context, name string) (Country, error) {
+func (s *CountryStorage) CreateCountry(ctx context.Context, name string) (storage.Country, error) {
 	country, err := s.queries.CreateCountry(ctx, name)
 
 	if err != nil {
-		return Country{}, errors.PgToStorageErr(err)
+		return storage.Country{}, errors.PgToStorageErr(err)
 	}
 
 	return newCountry(country), nil
 }
 
-func (s *CountryStorage) GetCountry(ctx context.Context, id int32) (Country, error) {
+func (s *CountryStorage) GetCountry(ctx context.Context, id int32) (storage.Country, error) {
 	country, err := s.queries.GetCountry(ctx, id)
 
 	if err != nil {
-		return Country{}, errors.PgToStorageErr(err)
+		return storage.Country{}, errors.PgToStorageErr(err)
 	}
 
 	return newCountry(country), nil
 }
 
-func (s *CountryStorage) ListCountries(ctx context.Context) ([]Country, error) {
+func (s *CountryStorage) ListCountries(ctx context.Context) ([]storage.Country, error) {
 	countries, err := s.queries.ListCountries(ctx)
 
 	if err != nil {
