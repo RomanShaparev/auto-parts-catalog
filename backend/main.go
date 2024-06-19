@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"log"
 	"net/http"
 	"os"
@@ -14,12 +13,12 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func main() {
 
 	{
-		flag.Parse()
 		// Set up a connection to the server.
 		conn, err := grpc.NewClient(os.Getenv("CATALOG_SERVICE_URL"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
@@ -31,15 +30,20 @@ func main() {
 		// Contact the server and print out its response.
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
-		r, err := c.CreateCountry(ctx, &catalogservice.CreateCountryRequest{Name: "Tomsk"})
+		//r, err := c.CreateCountry(ctx, &catalogservice.CreateCountryRequest{Name: "Tomsk"})
+		//r, err := c.CreateCountry(ctx, &catalogservice.CreateCountryRequest{Name: "Moskow"})
+		//r, err := c.GetCountry(ctx, &catalogservice.GetCountryRequest{Id: 2})
+		r, err := c.ListCountries(ctx, &emptypb.Empty{})
+		//r, err := c.DeleteCountry(ctx, &catalogservice.DeleteCountryRequest{Id: 1})
 		if err != nil {
-			log.Fatalf("could not greet: %v", err)
+			log.Printf("ERROR: %v", err)
+		} else {
+			log.Printf("SUCCESS: %s", r)
 		}
-		log.Printf("Greeting: %s", r.GetName())
 
 	}
 
-	//return
+	return
 	{
 		r := chi.NewRouter()
 		r.Use(middleware.Logger)

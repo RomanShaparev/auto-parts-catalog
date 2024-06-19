@@ -2,8 +2,10 @@ package errors
 
 import (
 	"errors"
+	"log"
 	"strings"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -12,10 +14,10 @@ import (
 func StorageToGrpcErr(err error) error {
 	var errCode codes.Code
 	var message string
-	var pgErr *StorageError
+	var storageErr *StorageError
 
-	if errors.As(err, &pgErr) {
-		switch pgErr.Code {
+	if errors.As(err, &storageErr) {
+		switch storageErr.Code {
 		case InvalidArgumentError:
 			errCode = codes.InvalidArgument
 		case NotFoundError:
@@ -27,7 +29,7 @@ func StorageToGrpcErr(err error) error {
 		default:
 			errCode = codes.Unknown
 		}
-		message = pgErr.Error()
+		message = storageErr.Error()
 	} else {
 		errCode = codes.Internal
 		message = ""
@@ -36,9 +38,15 @@ func StorageToGrpcErr(err error) error {
 }
 
 func PgToStorageErr(err error) error {
+	log.Print(err)
 	errCode := InternalError
 	var pgErr *pgconn.PgError
-	if errors.As(err, &pgErr) {
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		errCode = NotFoundError
+	} else if errors.As(err, &pgErr) {
+		log.Print(err)
+
 		// Class 23 — Integrity Constraint Violation
 		if strings.HasPrefix(pgErr.Code, "23") {
 			if pgErr.Code == "23505" {
