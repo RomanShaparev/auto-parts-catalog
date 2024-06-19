@@ -1,5 +1,4 @@
 DROP TABLE countries;
-DROP TABLE cities;
 DROP TABLE warehouses;
 DROP TABLE car_models;
 DROP TABLE auto_parts;

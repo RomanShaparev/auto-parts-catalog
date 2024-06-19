@@ -3,16 +3,11 @@ CREATE TABLE countries(
     country_name text NOT NULL UNIQUE
 );
 
-CREATE TABLE cities(
-    city_id serial PRIMARY KEY,
+CREATE TABLE warehouses(
+    warehouse_id serial PRIMARY KEY,
     country_id int NOT NULL REFERENCES countries(country_id) ON DELETE CASCADE,
     city_name text NOT NULL,
     UNIQUE(country_id, city_name)
-);
-
-CREATE TABLE warehouses(
-    warehouse_id serial PRIMARY KEY,
-    city_id int NOT NULL UNIQUE REFERENCES cities(city_id) ON DELETE CASCADE
 );
 
 CREATE TABLE car_models(
