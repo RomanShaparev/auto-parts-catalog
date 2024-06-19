@@ -6,10 +6,12 @@ import (
 
 func NewStorage(queries *queries.Queries) *Storage {
 	return &Storage{
-		CountryStorage: NewCountryStorage(queries),
+		CountryStorage:   NewCountryStorage(queries),
+		WarehouseStorage: NewWarehouseStorage(queries),
 	}
 }
 
 type Storage struct {
 	*CountryStorage
+	*WarehouseStorage
 }

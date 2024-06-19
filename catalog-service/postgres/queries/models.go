@@ -26,12 +26,6 @@ type CarModel struct {
 	CarModelName string
 }
 
-type City struct {
-	CityID    int32
-	CountryID int32
-	CityName  string
-}
-
 type Country struct {
 	CountryID   int32
 	CountryName string
@@ -39,7 +33,8 @@ type Country struct {
 
 type Warehouse struct {
 	WarehouseID int32
-	CityID      int32
+	CountryID   int32
+	CityName    string
 }
 
 type WarehousePosition struct {
