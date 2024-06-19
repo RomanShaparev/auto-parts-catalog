@@ -18,13 +18,14 @@ type WarehouseStorage struct {
 
 func newWarehouse(warehouse queries.Warehouse) storage.Warehouse {
 	return storage.Warehouse{
-		Id:       warehouse.CountryID,
-		CityName: warehouse.CityName,
+		Id:        warehouse.WarehouseID,
+		CountryId: warehouse.CountryID,
+		CityName:  warehouse.CityName,
 	}
 }
 
-func (s *WarehouseStorage) CreateWarehouse(ctx context.Context, cityName string) (storage.Warehouse, error) {
-	warehouse, err := s.queries.CreateWarehouse(ctx, cityName)
+func (s *WarehouseStorage) CreateWarehouse(ctx context.Context, countryId int32, cityName string) (storage.Warehouse, error) {
+	warehouse, err := s.queries.CreateWarehouse(ctx, queries.CreateWarehouseParams{CountryID: countryId, CityName: cityName})
 
 	if err != nil {
 		return storage.Warehouse{}, errors.PgToStorageErr(err)

@@ -13,7 +13,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func main() {
@@ -25,16 +24,24 @@ func main() {
 			log.Fatalf("did not connect: %v", err)
 		}
 		defer conn.Close()
-		c := catalogservice.NewCountryServiceClient(conn)
+		//c := catalogservice.NewCountryServiceClient(conn)
+		c := catalogservice.NewWarehouseServiceClient(conn)
 
 		// Contact the server and print out its response.
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
-		//r, err := c.CreateCountry(ctx, &catalogservice.CreateCountryRequest{Name: "Tomsk"})
-		//r, err := c.CreateCountry(ctx, &catalogservice.CreateCountryRequest{Name: "Moskow"})
+
+		// Country
+		//r, err := c.CreateCountry(ctx, &catalogservice.CreateCountryRequest{Name: "Россия"})
+		//r, err := c.CreateCountry(ctx, &catalogservice.CreateCountryRequest{Name: "Казахстан"})
 		//r, err := c.GetCountry(ctx, &catalogservice.GetCountryRequest{Id: 2})
-		r, err := c.ListCountries(ctx, &emptypb.Empty{})
+		//r, err := c.ListCountries(ctx, &emptypb.Empty{})
 		//r, err := c.DeleteCountry(ctx, &catalogservice.DeleteCountryRequest{Id: 1})
+
+		// Warehouse
+		//r, err := c.CreateWarehouse(ctx, &catalogservice.CreateWarehouseRequest{CountryId: 3, CityName: "Москва"})
+		r, err := c.ListWarehouses(ctx, &catalogservice.ListWarehousesRequest{CountryId: 1})
+
 		if err != nil {
 			log.Printf("ERROR: %v", err)
 		} else {

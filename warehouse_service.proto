@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option go_package = "auto-parts-catalog/catalog-service/catalogservice/gen";
+
+package gen;
+
+import "google/protobuf/empty.proto";
+
+service WarehouseService {
+  rpc CreateWarehouse(CreateWarehouseRequest) returns (Warehouse);
+  rpc GetWarehouse(GetWarehouseRequest) returns (Warehouse);
+  rpc ListWarehouses(ListWarehousesRequest) returns (ListWarehousesResponse);
+  rpc DeleteWarehouse(DeleteWarehouseRequest) returns (google.protobuf.Empty);
+}
+
+message CreateWarehouseRequest {
+  int32 country_id = 1;
+  string city_name = 2;
+}
+ 
+message GetWarehouseRequest {
+  int32 id = 1;
+}
+
+message ListWarehousesRequest {
+  int32 country_id = 1;
+}
+ 
+message ListWarehousesResponse {
+  repeated Warehouse Warehouses = 1;
+}
+ 
+message DeleteWarehouseRequest {
+  int32 id = 1;
+}
+ 
+message Warehouse {
+  int32 id = 1;
+  string city_name = 2;
+}

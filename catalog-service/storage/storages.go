@@ -10,7 +10,7 @@ type CountryStorage interface {
 }
 
 type WarehouseStorage interface {
-	CreateWarehouse(ctx context.Context, cityName string) (Warehouse, error)
+	CreateWarehouse(ctx context.Context, countryId int32, cityName string) (Warehouse, error)
 	GetWarehouse(ctx context.Context, id int32) (Warehouse, error)
 	ListWarehousesByCountryId(ctx context.Context, countryId int32) ([]Warehouse, error)
 	DeleteWarehouse(ctx context.Context, id int32) error
@@ -22,6 +22,7 @@ type Country struct {
 }
 
 type Warehouse struct {
-	Id       int32
-	CityName string
+	Id        int32
+	CountryId int32
+	CityName  string
 }

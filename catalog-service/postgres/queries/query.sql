@@ -22,9 +22,9 @@ WHERE country_id = $1;
 
 -- name: CreateWarehouse :one
 INSERT INTO warehouses (
-  city_name
+  country_id, city_name
 ) VALUES (
-  $1
+  $1, $2
 )
 RETURNING *;
 

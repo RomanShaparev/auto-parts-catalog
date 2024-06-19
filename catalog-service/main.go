@@ -35,6 +35,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	gen.RegisterCountryServiceServer(s, catalogservice.NewCountryServiceServer(storage.CountryStorage))
+	gen.RegisterWarehouseServiceServer(s, catalogservice.NewWarehouseServiceServer(storage.WarehouseStorage))
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

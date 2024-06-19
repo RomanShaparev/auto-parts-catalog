@@ -27,15 +27,20 @@ func (q *Queries) CreateCountry(ctx context.Context, countryName string) (Countr
 
 const createWarehouse = `-- name: CreateWarehouse :one
 INSERT INTO warehouses (
-  city_name
+  country_id, city_name
 ) VALUES (
-  $1
+  $1, $2
 )
 RETURNING warehouse_id, country_id, city_name
 `
 
-func (q *Queries) CreateWarehouse(ctx context.Context, cityName string) (Warehouse, error) {
-	row := q.db.QueryRow(ctx, createWarehouse, cityName)
+type CreateWarehouseParams struct {
+	CountryID int32
+	CityName  string
+}
+
+func (q *Queries) CreateWarehouse(ctx context.Context, arg CreateWarehouseParams) (Warehouse, error) {
+	row := q.db.QueryRow(ctx, createWarehouse, arg.CountryID, arg.CityName)
 	var i Warehouse
 	err := row.Scan(&i.WarehouseID, &i.CountryID, &i.CityName)
 	return i, err
