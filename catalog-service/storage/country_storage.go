@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"auto-parts-catalog/catalog-service/errconv"
+	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/postgres/queries"
 	"context"
 )
@@ -23,7 +23,7 @@ func (s *CountryStorage) CreateCountry(ctx context.Context, name string) (*Count
 	country, err := s.queries.CreateCountry(ctx, name)
 
 	if err != nil {
-		return &Country{}, errconv.PgToStorageErr(err)
+		return &Country{}, errors.PgToStorageErr(err)
 	}
 
 	return &Country{

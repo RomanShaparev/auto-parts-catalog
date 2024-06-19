@@ -29,7 +29,7 @@ func main() {
 		c := catalogservice.NewCountryServiceClient(conn)
 
 		// Contact the server and print out its response.
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 		r, err := c.CreateCountry(ctx, &catalogservice.CreateCountryRequest{Name: "Tomsk"})
 		if err != nil {

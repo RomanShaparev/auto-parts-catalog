@@ -2,7 +2,7 @@ package catalogservice
 
 import (
 	"auto-parts-catalog/catalog-service/catalogservice/gen"
-	"auto-parts-catalog/catalog-service/errconv"
+	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/storage"
 	"context"
 )
@@ -20,7 +20,7 @@ func (s *CountryServiceServer) CreateCountry(ctx context.Context, request *gen.C
 	country, err := s.storage.CreateCountry(ctx, request.Name)
 
 	if err != nil {
-		return &gen.Country{}, errconv.StorageToGrpcErr(err)
+		return &gen.Country{}, errors.StorageToGrpcErr(err)
 	}
 
 	return &gen.Country{

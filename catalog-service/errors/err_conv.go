@@ -1,4 +1,4 @@
-package errconv
+package errors
 
 import (
 	"errors"

@@ -1,4 +1,4 @@
-package errconv
+package errors
 
 type StorageError struct {
 	Code    StorageErrorCode
