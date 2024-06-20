@@ -15,10 +15,10 @@ type AutoPart struct {
 }
 
 type AutoPartComponent struct {
-	AutoPartComponentID   int32
-	AutoPartID            int32
-	ParentID              pgtype.Int4
-	AutoPartComponentName string
+	AutoPartComponentID       int32
+	AutoPartID                pgtype.Int4
+	ParentAutoPartComponentID pgtype.Int4
+	AutoPartComponentName     string
 }
 
 type CarModel struct {

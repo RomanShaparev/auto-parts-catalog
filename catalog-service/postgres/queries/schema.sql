@@ -23,8 +23,8 @@ CREATE TABLE auto_parts(
 
 CREATE TABLE auto_part_components(
     auto_part_component_id serial PRIMARY KEY,
-    auto_part_id int NOT NULL REFERENCES auto_parts(auto_part_id) ON DELETE CASCADE,
-    parent_id int REFERENCES auto_part_components(auto_part_component_id) ON DELETE CASCADE,
+    auto_part_id int REFERENCES auto_parts(auto_part_id) ON DELETE CASCADE,
+    parent_auto_part_component_id int REFERENCES auto_part_components(auto_part_component_id) ON DELETE CASCADE,
     auto_part_component_name text NOT NULL,
     UNIQUE(parent_id, auto_part_component_name)
 );
