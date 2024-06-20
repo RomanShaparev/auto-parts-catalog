@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+option go_package = "auto-parts-catalog/catalog-service/catalogservice/gen";
+
+package gen;
+
+import "google/protobuf/empty.proto";
+
+service AutoPartComponentService {
+  rpc CreateRootAutoPartComponent(CreateRootAutoPartComponentRequest) returns (RootAutoPartComponent);
+  rpc CreateNonRootAutoPartComponent(CreateNonRootAutoPartComponentRequest) returns (NonRootAutoPartComponent);
+  rpc ListRootAutoPartComponents(ListRootAutoPartComponentsRequest) returns (ListRootAutoPartComponentsResponse);
+  rpc ListNonRootAutoPartComponents(ListNonRootAutoPartComponentsRequest) returns (ListNonRootAutoPartComponentsResponse);
+  rpc UpdateAutoPartComponent(UpdateAutoPartComponentRequest) returns (google.protobuf.Empty);
+  rpc DeleteAutoPartComponent(DeleteAutoPartComponentRequest) returns (google.protobuf.Empty);
+}
+
+message CreateRootAutoPartComponentRequest {
+  int32 auto_part_id = 1;
+  string name = 2;
+}
+
+message CreateNonRootAutoPartComponentRequest {
+  int32 parent_id = 1;
+  string name = 2;
+}
+
+message ListRootAutoPartComponentsRequest {
+  int32 auto_part_id = 1;
+}
+ 
+message ListRootAutoPartComponentsResponse {
+  repeated RootAutoPartComponent AutoPartComponents = 1;
+}
+
+message ListNonRootAutoPartComponentsRequest {
+  int32 parent_id = 1;
+}
+ 
+message ListNonRootAutoPartComponentsResponse {
+  repeated NonRootAutoPartComponent AutoPartComponents = 1;
+}
+ 
+message UpdateAutoPartComponentRequest {
+  int32 id = 1;
+  string name = 2;
+}
+ 
+message DeleteAutoPartComponentRequest {
+  int32 id = 1;
+}
+ 
+message RootAutoPartComponent {
+  int32 id = 1;
+  int32 auto_part_id = 2;
+  string name = 3;
+}
+
+message NonRootAutoPartComponent {
+  int32 id = 1;
+  int32 parent_id = 2;
+  string name = 3;
+}

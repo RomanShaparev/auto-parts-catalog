@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = "auto-parts-catalog/catalog-service/catalogservice/gen";
+
+package gen;
+
+service WarehousePositionService {
+  rpc CreateOrUpdateWarehousePosition(CreateOrUpdateWarehousePositionRequest) returns (WarehousePosition);
+  rpc GetWarehousePosition(GetWarehousePositionRequest) returns (WarehousePosition);
+}
+
+message CreateOrUpdateWarehousePositionRequest {
+  int32 warehouse_id = 1;
+  int32 auto_part_component_id = 2;
+  int32 quantity = 3;
+}
+ 
+message GetWarehousePositionRequest {
+  int32 warehouse_id = 1;
+  int32 auto_part_component_id = 2;
+}
+
+message WarehousePosition {
+  int32 warehouse_id = 1;
+  int32 auto_part_component_id = 2;
+  int32 quantity = 3;
+}

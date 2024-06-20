@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option go_package = "auto-parts-catalog/catalog-service/catalogservice/gen";
+
+package gen;
+
+import "google/protobuf/empty.proto";
+
+service AutoPartService {
+  rpc CreateAutoPart(CreateAutoPartRequest) returns (AutoPart);
+  rpc GetAutoPart(GetAutoPartRequest) returns (AutoPart);
+  rpc ListAutoParts(ListAutoPartsRequest) returns (ListAutoPartsResponse);
+  rpc DeleteAutoPart(DeleteAutoPartRequest) returns (google.protobuf.Empty);
+}
+
+message CreateAutoPartRequest {
+  int32 car_model_id = 1;
+  string name = 2;
+}
+ 
+message GetAutoPartRequest {
+  int32 id = 1;
+}
+
+message ListAutoPartsRequest {
+  int32 car_model_id = 1;
+}
+ 
+message ListAutoPartsResponse {
+  repeated AutoPart AutoParts = 1;
+}
+ 
+message DeleteAutoPartRequest {
+  int32 id = 1;
+}
+ 
+message AutoPart {
+  int32 id = 1;
+  int32 car_model_id = 2;
+  string name = 3;
+}

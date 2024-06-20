@@ -9,9 +9,10 @@ sqlc_generate:
 	sqlc generate
 
 grpc_generate:
-	protoc --go_out=./catalog-service/catalogservice/gen --go_opt=paths=source_relative \
-		   --go-grpc_out=./catalog-service/catalogservice/gen --go-grpc_opt=paths=source_relative \
+	cd catalog-service-proto; \
+	protoc --go_out=./../catalog-service/catalogservice/gen --go_opt=paths=source_relative \
+		   --go-grpc_out=./../catalog-service/catalogservice/gen --go-grpc_opt=paths=source_relative \
 		   *.proto; \
-	protoc --go_out=./backend/catalogservice/gen --go_opt=paths=source_relative \
-		   --go-grpc_out=./backend/catalogservice/gen --go-grpc_opt=paths=source_relative \
+	protoc --go_out=./../backend/catalogservice/gen --go_opt=paths=source_relative \
+		   --go-grpc_out=./../backend/catalogservice/gen --go-grpc_opt=paths=source_relative \
 		   *.proto
