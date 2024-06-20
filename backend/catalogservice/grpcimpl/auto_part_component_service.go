@@ -16,6 +16,9 @@ type AutoPartComponentService struct {
 }
 
 func grpcToServiceRootAutoPartComponent(autoPartComponent *gen.RootAutoPartComponent) catalogservice.RootAutoPartComponent {
+	if autoPartComponent == nil {
+		return catalogservice.RootAutoPartComponent{}
+	}
 	return catalogservice.RootAutoPartComponent{
 		Id:         autoPartComponent.Id,
 		AutoPartId: autoPartComponent.AutoPartId,
@@ -24,6 +27,9 @@ func grpcToServiceRootAutoPartComponent(autoPartComponent *gen.RootAutoPartCompo
 }
 
 func grpcToServiceNonRootAutoPartComponent(autoPartComponent *gen.NonRootAutoPartComponent) catalogservice.NonRootAutoPartComponent {
+	if autoPartComponent == nil {
+		return catalogservice.NonRootAutoPartComponent{}
+	}
 	return catalogservice.NonRootAutoPartComponent{
 		Id:       autoPartComponent.Id,
 		ParentId: autoPartComponent.ParentId,

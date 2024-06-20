@@ -15,6 +15,9 @@ type WarehousePositionService struct {
 }
 
 func grpcToServiceWarehousePosition(warehousePosition *gen.WarehousePosition) catalogservice.WarehousePosition {
+	if warehousePosition == nil {
+		return catalogservice.WarehousePosition{}
+	}
 	return catalogservice.WarehousePosition{
 		WarehouseId:         warehousePosition.WarehouseId,
 		AutoPartComponentId: warehousePosition.AutoPartComponentId,
@@ -22,7 +25,7 @@ func grpcToServiceWarehousePosition(warehousePosition *gen.WarehousePosition) ca
 	}
 }
 
-func (s *WarehousePositionService) CreateOrUpdateWarehousePositionPosition(ctx context.Context, warehouseId int32, autoPartComponentID int32, quantity int32) (catalogservice.WarehousePosition, error) {
+func (s *WarehousePositionService) CreateOrUpdateWarehousePosition(ctx context.Context, warehouseId int32, autoPartComponentID int32, quantity int32) (catalogservice.WarehousePosition, error) {
 	warehousePosition, err := s.client.CreateOrUpdateWarehousePosition(ctx, &gen.CreateOrUpdateWarehousePositionRequest{
 		WarehouseId:         warehouseId,
 		AutoPartComponentId: autoPartComponentID,
@@ -31,7 +34,7 @@ func (s *WarehousePositionService) CreateOrUpdateWarehousePositionPosition(ctx c
 	return grpcToServiceWarehousePosition(warehousePosition), grpcToServiceErr(err)
 }
 
-func (s *WarehousePositionService) GetWarehousePositionPosition(ctx context.Context, warehouseId int32, autoPartComponentID int32) (catalogservice.WarehousePosition, error) {
+func (s *WarehousePositionService) GetWarehousePosition(ctx context.Context, warehouseId int32, autoPartComponentID int32) (catalogservice.WarehousePosition, error) {
 	warehousePosition, err := s.client.GetWarehousePosition(ctx, &gen.GetWarehousePositionRequest{
 		WarehouseId:         warehouseId,
 		AutoPartComponentId: autoPartComponentID,

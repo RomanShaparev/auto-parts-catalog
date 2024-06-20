@@ -16,6 +16,9 @@ type WarehouseService struct {
 }
 
 func grpcToServiceWarehouse(warehouse *gen.Warehouse) catalogservice.Warehouse {
+	if warehouse == nil {
+		return catalogservice.Warehouse{}
+	}
 	return catalogservice.Warehouse{
 		Id:        warehouse.Id,
 		CountryId: warehouse.CountryId,

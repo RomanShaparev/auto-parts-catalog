@@ -18,6 +18,9 @@ type CountryService struct {
 }
 
 func grpcToServiceCountry(country *gen.Country) catalogservice.Country {
+	if country == nil {
+		return catalogservice.Country{}
+	}
 	return catalogservice.Country{
 		Id:   country.Id,
 		Name: country.Name,

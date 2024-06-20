@@ -16,6 +16,10 @@ type AutoPartService struct {
 }
 
 func grpcToServiceAutoPart(autoPart *gen.AutoPart) catalogservice.AutoPart {
+	if autoPart == nil {
+		return catalogservice.AutoPart{}
+	}
+
 	return catalogservice.AutoPart{
 		Id:         autoPart.Id,
 		CarModelId: autoPart.CarModelId,

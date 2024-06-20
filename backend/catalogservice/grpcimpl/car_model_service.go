@@ -18,6 +18,9 @@ type CarModelService struct {
 }
 
 func grpcToServiceCarModel(carModel *gen.CarModel) catalogservice.CarModel {
+	if carModel == nil {
+		return catalogservice.CarModel{}
+	}
 	return catalogservice.CarModel{
 		Id:   carModel.Id,
 		Name: carModel.Name,
