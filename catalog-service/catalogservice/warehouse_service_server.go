@@ -21,8 +21,9 @@ type WarehouseServiceServer struct {
 
 func storageToGrpcWarehouse(warehouse storage.Warehouse) *gen.Warehouse {
 	return &gen.Warehouse{
-		Id:       warehouse.Id,
-		CityName: warehouse.CityName,
+		Id:        warehouse.Id,
+		CountryId: warehouse.CountryId,
+		CityName:  warehouse.CityName,
 	}
 }
 

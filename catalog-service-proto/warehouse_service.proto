@@ -36,5 +36,6 @@ message DeleteWarehouseRequest {
  
 message Warehouse {
   int32 id = 1;
-  string city_name = 2;
+  int32 country_id = 2;
+  string city_name = 3;
 }

@@ -1,0 +1,40 @@
+package grpcimpl
+
+import (
+	"auto-parts-catalog/backend/catalogservice"
+	"auto-parts-catalog/backend/catalogservice/gen"
+	"context"
+)
+
+func NewWarehousePositionService(client gen.WarehousePositionServiceClient) *WarehousePositionService {
+	return &WarehousePositionService{client: client}
+}
+
+type WarehousePositionService struct {
+	client gen.WarehousePositionServiceClient
+}
+
+func grpcToServiceWarehousePosition(warehousePosition *gen.WarehousePosition) catalogservice.WarehousePosition {
+	return catalogservice.WarehousePosition{
+		WarehouseId:         warehousePosition.WarehouseId,
+		AutoPartComponentId: warehousePosition.AutoPartComponentId,
+		Quantity:            warehousePosition.Quantity,
+	}
+}
+
+func (s *WarehousePositionService) CreateOrUpdateWarehousePositionPosition(ctx context.Context, warehouseId int32, autoPartComponentID int32, quantity int32) (catalogservice.WarehousePosition, error) {
+	warehousePosition, err := s.client.CreateOrUpdateWarehousePosition(ctx, &gen.CreateOrUpdateWarehousePositionRequest{
+		WarehouseId:         warehouseId,
+		AutoPartComponentId: autoPartComponentID,
+		Quantity:            quantity,
+	})
+	return grpcToServiceWarehousePosition(warehousePosition), grpcToServiceErr(err)
+}
+
+func (s *WarehousePositionService) GetWarehousePositionPosition(ctx context.Context, warehouseId int32, autoPartComponentID int32) (catalogservice.WarehousePosition, error) {
+	warehousePosition, err := s.client.GetWarehousePosition(ctx, &gen.GetWarehousePositionRequest{
+		WarehouseId:         warehouseId,
+		AutoPartComponentId: autoPartComponentID,
+	})
+	return grpcToServiceWarehousePosition(warehousePosition), grpcToServiceErr(err)
+}
