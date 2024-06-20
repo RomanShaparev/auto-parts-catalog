@@ -36,6 +36,11 @@ func main() {
 	s := grpc.NewServer()
 	gen.RegisterCountryServiceServer(s, catalogservice.NewCountryServiceServer(storage.CountryStorage))
 	gen.RegisterWarehouseServiceServer(s, catalogservice.NewWarehouseServiceServer(storage.WarehouseStorage))
+	gen.RegisterCarModelServiceServer(s, catalogservice.NewCarModelServiceServer(storage.CarModelStorage))
+	gen.RegisterAutoPartServiceServer(s, catalogservice.NewAutoPartServiceServer(storage.AutoPartStorage))
+	gen.RegisterAutoPartComponentServiceServer(s, catalogservice.NewAutoPartComponentServiceServer(storage.AutoPartComponentStorage))
+	gen.RegisterWarehousePositionServiceServer(s, catalogservice.NewWarehousePositionServiceServer(storage.WarehousePositionStorage))
+
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

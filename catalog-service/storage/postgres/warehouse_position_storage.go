@@ -17,9 +17,9 @@ type WarehousePositionStorage struct {
 
 func pgToStorageWarehousePosition(warehousePosition queries.WarehousePosition) storage.WarehousePosition {
 	return storage.WarehousePosition{
-		WarehouseId: warehousePosition.WarehouseID,
-		ParentId:    warehousePosition.AutoPartComponentID,
-		Quantity:    warehousePosition.Quantity,
+		WarehouseId:         warehousePosition.WarehouseID,
+		AutoPartComponentId: warehousePosition.AutoPartComponentID,
+		Quantity:            warehousePosition.Quantity,
 	}
 }
 

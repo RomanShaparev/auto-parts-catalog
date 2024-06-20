@@ -2,7 +2,6 @@ package errors
 
 import (
 	"errors"
-	"log"
 	"strings"
 
 	"github.com/jackc/pgx/v5"
@@ -46,14 +45,12 @@ func PgToStorageErr(err error) error {
 		return nil
 	}
 
-	log.Print(err)
 	errCode := InternalError
 	var pgErr *pgconn.PgError
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		errCode = NotFoundError
 	} else if errors.As(err, &pgErr) {
-		log.Print(err)
 
 		// Class 23 — Integrity Constraint Violation
 		if strings.HasPrefix(pgErr.Code, "23") {

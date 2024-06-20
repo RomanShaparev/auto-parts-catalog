@@ -79,7 +79,7 @@ type NonRootAutoPartComponent struct {
 }
 
 type WarehousePosition struct {
-	WarehouseId int32
-	ParentId    int32
-	Quantity    int32
+	WarehouseId         int32
+	AutoPartComponentId int32
+	Quantity            int32
 }
