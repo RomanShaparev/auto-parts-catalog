@@ -104,10 +104,6 @@ INSERT INTO auto_part_components (
 )
 RETURNING *;
 
--- name: GetAutoPartComponent :one
-SELECT * FROM auto_part_components
-WHERE auto_part_component_id = $1;
-
 -- name: ListRootAutoPartComponents :many
 SELECT * FROM auto_part_components
 WHERE auto_part_id = $1
@@ -137,3 +133,7 @@ INSERT INTO warehouse_positions  (
 )
 ON CONFLICT (warehouse_id, auto_part_component_id) 
 DO UPDATE SET quantity = EXCLUDED.quantity; 
+
+-- name: GetWarehousePosition :one
+SELECT * FROM warehouse_positions
+WHERE warehouse_id = $1 AND auto_part_component_id = $1;

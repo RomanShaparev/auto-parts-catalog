@@ -220,23 +220,6 @@ func (q *Queries) GetAutoPart(ctx context.Context, autoPartID int32) (AutoPart, 
 	return i, err
 }
 
-const getAutoPartComponent = `-- name: GetAutoPartComponent :one
-SELECT auto_part_component_id, auto_part_id, parent_auto_part_component_id, auto_part_component_name FROM auto_part_components
-WHERE auto_part_component_id = $1
-`
-
-func (q *Queries) GetAutoPartComponent(ctx context.Context, autoPartComponentID int32) (AutoPartComponent, error) {
-	row := q.db.QueryRow(ctx, getAutoPartComponent, autoPartComponentID)
-	var i AutoPartComponent
-	err := row.Scan(
-		&i.AutoPartComponentID,
-		&i.AutoPartID,
-		&i.ParentAutoPartComponentID,
-		&i.AutoPartComponentName,
-	)
-	return i, err
-}
-
 const getCarModel = `-- name: GetCarModel :one
 SELECT car_model_id, car_model_name FROM car_models
 WHERE car_model_id = $1
@@ -270,6 +253,18 @@ func (q *Queries) GetWarehouse(ctx context.Context, warehouseID int32) (Warehous
 	row := q.db.QueryRow(ctx, getWarehouse, warehouseID)
 	var i Warehouse
 	err := row.Scan(&i.WarehouseID, &i.CountryID, &i.CityName)
+	return i, err
+}
+
+const getWarehousePosition = `-- name: GetWarehousePosition :one
+SELECT warehouse_id, auto_part_component_id, quantity FROM warehouse_positions
+WHERE warehouse_id = $1 AND auto_part_component_id = $1
+`
+
+func (q *Queries) GetWarehousePosition(ctx context.Context, warehouseID int32) (WarehousePosition, error) {
+	row := q.db.QueryRow(ctx, getWarehousePosition, warehouseID)
+	var i WarehousePosition
+	err := row.Scan(&i.WarehouseID, &i.AutoPartComponentID, &i.Quantity)
 	return i, err
 }
 
