@@ -16,49 +16,37 @@ type CountryStorage struct {
 	queries *queries.Queries
 }
 
-func newCountry(country queries.Country) storage.Country {
+func pgToStorageCountry(country queries.Country) storage.Country {
 	return storage.Country{
 		Id:   country.CountryID,
 		Name: country.CountryName,
 	}
 }
 
+func mapCountryQueryResult(country queries.Country, err error) (storage.Country, error) {
+	return pgToStorageCountry(country), errors.PgToStorageErr(err)
+}
+
+func mapCountryQueryResults(countries []queries.Country, err error) ([]storage.Country, error) {
+	return mapping.Map(countries, pgToStorageCountry), errors.PgToStorageErr(err)
+}
+
 func (s *CountryStorage) CreateCountry(ctx context.Context, name string) (storage.Country, error) {
 	country, err := s.queries.CreateCountry(ctx, name)
-
-	if err != nil {
-		return storage.Country{}, errors.PgToStorageErr(err)
-	}
-
-	return newCountry(country), nil
+	return mapCountryQueryResult(country, err)
 }
 
 func (s *CountryStorage) GetCountry(ctx context.Context, id int32) (storage.Country, error) {
 	country, err := s.queries.GetCountry(ctx, id)
-
-	if err != nil {
-		return storage.Country{}, errors.PgToStorageErr(err)
-	}
-
-	return newCountry(country), nil
+	return mapCountryQueryResult(country, err)
 }
 
 func (s *CountryStorage) ListCountries(ctx context.Context) ([]storage.Country, error) {
 	countries, err := s.queries.ListCountries(ctx)
-
-	if err != nil {
-		return nil, errors.PgToStorageErr(err)
-	}
-
-	return mapping.Map(countries, newCountry), nil
+	return mapCountryQueryResults(countries, err)
 }
 
 func (s *CountryStorage) DeleteCountry(ctx context.Context, id int32) error {
 	err := s.queries.DeleteCountry(ctx, id)
-
-	if err != nil {
-		return errors.PgToStorageErr(err)
-	}
-
-	return nil
+	return errors.PgToStorageErr(err)
 }

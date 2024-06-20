@@ -16,7 +16,7 @@ type WarehouseStorage struct {
 	queries *queries.Queries
 }
 
-func newWarehouse(warehouse queries.Warehouse) storage.Warehouse {
+func pgToStorageWarehouse(warehouse queries.Warehouse) storage.Warehouse {
 	return storage.Warehouse{
 		Id:        warehouse.WarehouseID,
 		CountryId: warehouse.CountryID,
@@ -24,42 +24,30 @@ func newWarehouse(warehouse queries.Warehouse) storage.Warehouse {
 	}
 }
 
+func mapWarehouseQueryResult(warehouse queries.Warehouse, err error) (storage.Warehouse, error) {
+	return pgToStorageWarehouse(warehouse), errors.PgToStorageErr(err)
+}
+
+func mapWarehouseQueryResults(warehouses []queries.Warehouse, err error) ([]storage.Warehouse, error) {
+	return mapping.Map(warehouses, pgToStorageWarehouse), errors.PgToStorageErr(err)
+}
+
 func (s *WarehouseStorage) CreateWarehouse(ctx context.Context, countryId int32, cityName string) (storage.Warehouse, error) {
 	warehouse, err := s.queries.CreateWarehouse(ctx, queries.CreateWarehouseParams{CountryID: countryId, CityName: cityName})
-
-	if err != nil {
-		return storage.Warehouse{}, errors.PgToStorageErr(err)
-	}
-
-	return newWarehouse(warehouse), nil
+	return mapWarehouseQueryResult(warehouse, err)
 }
 
 func (s *WarehouseStorage) GetWarehouse(ctx context.Context, id int32) (storage.Warehouse, error) {
 	warehouse, err := s.queries.GetWarehouse(ctx, id)
-
-	if err != nil {
-		return storage.Warehouse{}, errors.PgToStorageErr(err)
-	}
-
-	return newWarehouse(warehouse), nil
+	return mapWarehouseQueryResult(warehouse, err)
 }
 
 func (s *WarehouseStorage) ListWarehousesByCountryId(ctx context.Context, countryId int32) ([]storage.Warehouse, error) {
 	warehouses, err := s.queries.ListWarehousesByCountryId(ctx, countryId)
-
-	if err != nil {
-		return nil, errors.PgToStorageErr(err)
-	}
-
-	return mapping.Map(warehouses, newWarehouse), nil
+	return mapWarehouseQueryResults(warehouses, err)
 }
 
 func (s *WarehouseStorage) DeleteWarehouse(ctx context.Context, id int32) error {
 	err := s.queries.DeleteWarehouse(ctx, id)
-
-	if err != nil {
-		return errors.PgToStorageErr(err)
-	}
-
-	return nil
+	return errors.PgToStorageErr(err)
 }

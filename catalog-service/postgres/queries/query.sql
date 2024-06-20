@@ -125,15 +125,16 @@ WHERE auto_part_component_id = $1;
 
 
 
--- name: CreateOrUpdateWarehousePosition :exec
+-- name: CreateOrUpdateWarehousePosition :one
 INSERT INTO warehouse_positions  (
   warehouse_id, auto_part_component_id, quantity
 ) VALUES (
   $1, $2, $3
 )
 ON CONFLICT (warehouse_id, auto_part_component_id) 
-DO UPDATE SET quantity = EXCLUDED.quantity; 
+DO UPDATE SET quantity = EXCLUDED.quantity
+RETURNING *; 
 
 -- name: GetWarehousePosition :one
 SELECT * FROM warehouse_positions
-WHERE warehouse_id = $1 AND auto_part_component_id = $1;
+WHERE warehouse_id = $1 AND auto_part_component_id = $2;

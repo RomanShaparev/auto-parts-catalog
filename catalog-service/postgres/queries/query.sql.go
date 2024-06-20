@@ -90,7 +90,7 @@ func (q *Queries) CreateNonRootAutoPartComponent(ctx context.Context, arg Create
 	return i, err
 }
 
-const createOrUpdateWarehousePosition = `-- name: CreateOrUpdateWarehousePosition :exec
+const createOrUpdateWarehousePosition = `-- name: CreateOrUpdateWarehousePosition :one
 INSERT INTO warehouse_positions  (
   warehouse_id, auto_part_component_id, quantity
 ) VALUES (
@@ -98,6 +98,7 @@ INSERT INTO warehouse_positions  (
 )
 ON CONFLICT (warehouse_id, auto_part_component_id) 
 DO UPDATE SET quantity = EXCLUDED.quantity
+RETURNING warehouse_id, auto_part_component_id, quantity
 `
 
 type CreateOrUpdateWarehousePositionParams struct {
@@ -106,9 +107,11 @@ type CreateOrUpdateWarehousePositionParams struct {
 	Quantity            int32
 }
 
-func (q *Queries) CreateOrUpdateWarehousePosition(ctx context.Context, arg CreateOrUpdateWarehousePositionParams) error {
-	_, err := q.db.Exec(ctx, createOrUpdateWarehousePosition, arg.WarehouseID, arg.AutoPartComponentID, arg.Quantity)
-	return err
+func (q *Queries) CreateOrUpdateWarehousePosition(ctx context.Context, arg CreateOrUpdateWarehousePositionParams) (WarehousePosition, error) {
+	row := q.db.QueryRow(ctx, createOrUpdateWarehousePosition, arg.WarehouseID, arg.AutoPartComponentID, arg.Quantity)
+	var i WarehousePosition
+	err := row.Scan(&i.WarehouseID, &i.AutoPartComponentID, &i.Quantity)
+	return i, err
 }
 
 const createRootAutoPartComponent = `-- name: CreateRootAutoPartComponent :one
@@ -258,11 +261,16 @@ func (q *Queries) GetWarehouse(ctx context.Context, warehouseID int32) (Warehous
 
 const getWarehousePosition = `-- name: GetWarehousePosition :one
 SELECT warehouse_id, auto_part_component_id, quantity FROM warehouse_positions
-WHERE warehouse_id = $1 AND auto_part_component_id = $1
+WHERE warehouse_id = $1 AND auto_part_component_id = $2
 `
 
-func (q *Queries) GetWarehousePosition(ctx context.Context, warehouseID int32) (WarehousePosition, error) {
-	row := q.db.QueryRow(ctx, getWarehousePosition, warehouseID)
+type GetWarehousePositionParams struct {
+	WarehouseID         int32
+	AutoPartComponentID int32
+}
+
+func (q *Queries) GetWarehousePosition(ctx context.Context, arg GetWarehousePositionParams) (WarehousePosition, error) {
+	row := q.db.QueryRow(ctx, getWarehousePosition, arg.WarehouseID, arg.AutoPartComponentID)
 	var i WarehousePosition
 	err := row.Scan(&i.WarehouseID, &i.AutoPartComponentID, &i.Quantity)
 	return i, err

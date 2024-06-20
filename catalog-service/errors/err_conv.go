@@ -12,6 +12,10 @@ import (
 )
 
 func StorageToGrpcErr(err error) error {
+	if err == nil {
+		return nil
+	}
+
 	var errCode codes.Code
 	var message string
 	var storageErr *StorageError
@@ -38,6 +42,10 @@ func StorageToGrpcErr(err error) error {
 }
 
 func PgToStorageErr(err error) error {
+	if err == nil {
+		return nil
+	}
+
 	log.Print(err)
 	errCode := InternalError
 	var pgErr *pgconn.PgError
