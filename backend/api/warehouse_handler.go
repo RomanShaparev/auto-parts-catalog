@@ -29,19 +29,25 @@ func (Warehouse) Render(w http.ResponseWriter, r *http.Request) error {
 }
 
 type CreateWarehouseRequest struct {
-	CountryId int32  `json:"countryId"`
-	CityName  string `json:"cityName"`
+	CountryId *int32  `json:"countryId"`
+	CityName  *string `json:"cityName"`
 }
 
-func (*CreateWarehouseRequest) Bind(r *http.Request) error {
+func (cr *CreateWarehouseRequest) Bind(r *http.Request) error {
+	if cr.CountryId == nil || cr.CityName == nil {
+		return ErrBind
+	}
 	return nil
 }
 
 type ListWarehousesRequest struct {
-	CountryId int32 `json:"countryId"`
+	CountryId *int32 `json:"countryId"`
 }
 
-func (*ListWarehousesRequest) Bind(r *http.Request) error {
+func (lr *ListWarehousesRequest) Bind(r *http.Request) error {
+	if lr.CountryId == nil {
+		return ErrBind
+	}
 	return nil
 }
 
@@ -52,7 +58,7 @@ func (s *Server) handleCreateWarehouse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	warehouse, err := s.catalogService.CreateWarehouse(r.Context(), request.CountryId, request.CityName)
+	warehouse, err := s.catalogService.CreateWarehouse(r.Context(), *request.CountryId, *request.CityName)
 	if err != nil {
 		render.Render(w, r, serviceToHttpError(err))
 		return
@@ -85,7 +91,7 @@ func (s *Server) handleListWarehouses(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	warehouses, err := s.catalogService.ListWarehousesByCountryId(r.Context(), request.CountryId)
+	warehouses, err := s.catalogService.ListWarehousesByCountryId(r.Context(), *request.CountryId)
 	if err != nil {
 		render.Render(w, r, serviceToHttpError(err))
 		return

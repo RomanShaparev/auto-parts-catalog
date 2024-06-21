@@ -27,10 +27,13 @@ func (Country) Render(w http.ResponseWriter, r *http.Request) error {
 }
 
 type createCountryRequest struct {
-	Name string `json:"name"`
+	Name *string `json:"name"`
 }
 
-func (*createCountryRequest) Bind(r *http.Request) error {
+func (cr *createCountryRequest) Bind(r *http.Request) error {
+	if cr.Name == nil {
+		return ErrBind
+	}
 	return nil
 }
 
@@ -41,7 +44,7 @@ func (s *Server) handleCreateCountry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	country, err := s.catalogService.CreateCountry(r.Context(), request.Name)
+	country, err := s.catalogService.CreateCountry(r.Context(), *request.Name)
 	if err != nil {
 		render.Render(w, r, serviceToHttpError(err))
 		return

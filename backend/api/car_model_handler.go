@@ -27,10 +27,13 @@ func (CarModel) Render(w http.ResponseWriter, r *http.Request) error {
 }
 
 type CreateCarModelRequest struct {
-	Name string `json:"name"`
+	Name *string `json:"name"`
 }
 
-func (*CreateCarModelRequest) Bind(r *http.Request) error {
+func (cr *CreateCarModelRequest) Bind(r *http.Request) error {
+	if cr.Name == nil {
+		return ErrBind
+	}
 	return nil
 }
 
@@ -41,7 +44,7 @@ func (s *Server) handleCreateCarModel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	carModel, err := s.catalogService.CreateCarModel(r.Context(), request.Name)
+	carModel, err := s.catalogService.CreateCarModel(r.Context(), *request.Name)
 	if err != nil {
 		render.Render(w, r, serviceToHttpError(err))
 		return

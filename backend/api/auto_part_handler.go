@@ -49,19 +49,25 @@ func (AutoPart) Render(w http.ResponseWriter, r *http.Request) error {
 }
 
 type CreateAutoPartRequest struct {
-	CarModelId int32  `json:"carModelId"`
-	Name       string `json:"name"`
+	CarModelId *int32  `json:"carModelId"`
+	Name       *string `json:"name"`
 }
 
-func (*CreateAutoPartRequest) Bind(r *http.Request) error {
+func (cr *CreateAutoPartRequest) Bind(r *http.Request) error {
+	if cr.CarModelId == nil || cr.Name == nil {
+		return ErrBind
+	}
 	return nil
 }
 
 type ListAutoPartsRequest struct {
-	CarModelId int32 `json:"carModelId"`
+	CarModelId *int32 `json:"carModelId"`
 }
 
-func (*ListAutoPartsRequest) Bind(r *http.Request) error {
+func (lr *ListAutoPartsRequest) Bind(r *http.Request) error {
+	if lr.CarModelId == nil {
+		return ErrBind
+	}
 	return nil
 }
 
@@ -72,7 +78,7 @@ func (s *Server) handleCreateAutoPart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	autoPart, err := s.catalogService.CreateAutoPart(r.Context(), request.CarModelId, request.Name)
+	autoPart, err := s.catalogService.CreateAutoPart(r.Context(), *request.CarModelId, *request.Name)
 	if err != nil {
 		render.Render(w, r, serviceToHttpError(err))
 		return
@@ -105,7 +111,7 @@ func (s *Server) handleListAutoParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	autoParts, err := s.catalogService.ListAutoPartsByCarModelId(r.Context(), request.CarModelId)
+	autoParts, err := s.catalogService.ListAutoPartsByCarModelId(r.Context(), *request.CarModelId)
 	if err != nil {
 		render.Render(w, r, serviceToHttpError(err))
 		return
