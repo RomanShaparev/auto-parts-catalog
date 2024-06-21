@@ -1,4 +1,4 @@
-package grpcimpl
+package grpc
 
 import (
 	"auto-parts-catalog/backend/catalogservice"

@@ -1,18 +1,18 @@
-package api
+package rest
 
 import (
-	"auto-parts-catalog/backend/catalogservice/grpcimpl"
+	"auto-parts-catalog/backend/catalogservice/grpc"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 )
 
 type Server struct {
-	catalogService *grpcimpl.CatalogService
+	catalogService *grpc.CatalogService
 	router         *chi.Mux
 }
 
-func NewServer(catalogService *grpcimpl.CatalogService) *Server {
+func NewServer(catalogService *grpc.CatalogService) *Server {
 	srv := &Server{
 		catalogService: catalogService,
 		router:         chi.NewRouter(),

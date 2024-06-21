@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"auto-parts-catalog/backend/api"
-	"auto-parts-catalog/backend/catalogservice/grpcimpl"
+	"auto-parts-catalog/backend/api/rest"
+	grpcimpl "auto-parts-catalog/backend/catalogservice/grpc"
 
 	kitlog "github.com/go-kit/log"
 	"github.com/go-kit/log/level"
@@ -53,7 +53,7 @@ func main() {
 	catalogService := grpcimpl.NewCatalogService(conn)
 
 	// Set up server
-	server := api.NewServer(catalogService)
+	server := rest.NewServer(catalogService)
 	err = server.Start(":" + os.Getenv("PORT"))
 	if err != nil {
 		log.Fatalf("failed to start server: %v", err)

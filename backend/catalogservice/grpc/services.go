@@ -1,8 +1,8 @@
-package grpcimpl
+package grpc
 
 import (
 	"auto-parts-catalog/backend/catalogservice"
-	"auto-parts-catalog/backend/catalogservice/gen"
+	"auto-parts-catalog/backend/catalogservice/grpc/gen"
 
 	"google.golang.org/grpc"
 )
