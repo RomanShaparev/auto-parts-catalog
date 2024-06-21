@@ -15,10 +15,10 @@ type Country struct {
 	Name string `json:"name"`
 }
 
-func newCountry(m catalogservice.Country) render.Renderer {
+func newCountry(country catalogservice.Country) render.Renderer {
 	return Country{
-		Id:   m.Id,
-		Name: m.Name,
+		Id:   country.Id,
+		Name: country.Name,
 	}
 }
 
@@ -30,7 +30,7 @@ type createCountryRequest struct {
 	Name string `json:"name"`
 }
 
-func (mr *createCountryRequest) Bind(r *http.Request) error {
+func (*createCountryRequest) Bind(r *http.Request) error {
 	return nil
 }
 
