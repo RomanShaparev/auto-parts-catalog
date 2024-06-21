@@ -1,7 +1,7 @@
 package catalogservice
 
 import (
-	"auto-parts-catalog/catalog-service/catalogservice/gen"
+	"auto-parts-catalog/catalog-service/api/grpc/gen"
 	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/storage"
 	"context"

@@ -2,8 +2,8 @@ package postgres
 
 import (
 	"auto-parts-catalog/catalog-service/errors"
-	"auto-parts-catalog/catalog-service/postgres/queries"
 	"auto-parts-catalog/catalog-service/storage"
+	"auto-parts-catalog/catalog-service/storage/postgres/queries"
 	"context"
 )
 

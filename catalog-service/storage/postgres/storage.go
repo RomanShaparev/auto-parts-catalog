@@ -1,7 +1,7 @@
 package postgres
 
 import (
-	"auto-parts-catalog/catalog-service/postgres/queries"
+	"auto-parts-catalog/catalog-service/storage/postgres/queries"
 )
 
 func NewStorage(queries *queries.Queries) *Storage {

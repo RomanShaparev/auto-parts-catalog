@@ -1,10 +1,10 @@
 package main
 
 import (
-	"auto-parts-catalog/catalog-service/catalogservice"
-	"auto-parts-catalog/catalog-service/catalogservice/gen"
-	"auto-parts-catalog/catalog-service/postgres/queries"
+	grpcimpl "auto-parts-catalog/catalog-service/api/grpc"
+	"auto-parts-catalog/catalog-service/api/grpc/gen"
 	"auto-parts-catalog/catalog-service/storage/postgres"
+	"auto-parts-catalog/catalog-service/storage/postgres/queries"
 	"context"
 	"log"
 	"net"
@@ -34,12 +34,12 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	gen.RegisterCountryServiceServer(s, catalogservice.NewCountryServiceServer(storage.CountryStorage))
-	gen.RegisterWarehouseServiceServer(s, catalogservice.NewWarehouseServiceServer(storage.WarehouseStorage))
-	gen.RegisterCarModelServiceServer(s, catalogservice.NewCarModelServiceServer(storage.CarModelStorage))
-	gen.RegisterAutoPartServiceServer(s, catalogservice.NewAutoPartServiceServer(storage.AutoPartStorage))
-	gen.RegisterAutoPartComponentServiceServer(s, catalogservice.NewAutoPartComponentServiceServer(storage.AutoPartComponentStorage))
-	gen.RegisterWarehousePositionServiceServer(s, catalogservice.NewWarehousePositionServiceServer(storage.WarehousePositionStorage))
+	gen.RegisterCountryServiceServer(s, grpcimpl.NewCountryServiceServer(storage.CountryStorage))
+	gen.RegisterWarehouseServiceServer(s, grpcimpl.NewWarehouseServiceServer(storage.WarehouseStorage))
+	gen.RegisterCarModelServiceServer(s, grpcimpl.NewCarModelServiceServer(storage.CarModelStorage))
+	gen.RegisterAutoPartServiceServer(s, grpcimpl.NewAutoPartServiceServer(storage.AutoPartStorage))
+	gen.RegisterAutoPartComponentServiceServer(s, grpcimpl.NewAutoPartComponentServiceServer(storage.AutoPartComponentStorage))
+	gen.RegisterWarehousePositionServiceServer(s, grpcimpl.NewWarehousePositionServiceServer(storage.WarehousePositionStorage))
 
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
