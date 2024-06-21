@@ -8,10 +8,15 @@ require (
 	google.golang.org/protobuf v1.33.0
 )
 
-require github.com/ajg/form v1.5.1 // indirect
+require (
+	github.com/ajg/form v1.5.1 // indirect
+	github.com/go-logfmt/logfmt v0.5.1 // indirect
+)
 
 require (
 	github.com/go-chi/render v1.0.3
+	github.com/go-kit/log v0.2.1
+	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
 	golang.org/x/net v0.22.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
