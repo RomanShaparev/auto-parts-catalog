@@ -45,4 +45,18 @@ func (s *Server) routes() {
 			r.Delete("/", s.handleDeleteAutoPart)
 		})
 	})
+
+	s.router.Route("/auto-part-components", func(r chi.Router) {
+		r.Post("/", s.handleCreateAutoPartComponent)
+		r.Route("/{id}", func(r chi.Router) {
+			r.Get("/", s.handleGetAutoPartComponent)
+			r.Put("/", s.handleUpdateAutoPartComponent)
+			r.Delete("/", s.handleDeleteAutoPartComponent)
+		})
+	})
+
+	s.router.Route("/warehouses/{warehouseId}/components/{autoPartComponentId}", func(r chi.Router) {
+		r.Get("/", s.handleGetWarehousePosition)
+		r.Put("/", s.handleUpdateWarehousePosition)
+	})
 }

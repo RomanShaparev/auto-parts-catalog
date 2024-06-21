@@ -20,6 +20,7 @@ func storageToGrpcWarehousePosition(warehousePosition storage.WarehousePosition)
 	return &gen.WarehousePosition{
 		WarehouseId:         warehousePosition.WarehouseId,
 		AutoPartComponentId: warehousePosition.AutoPartComponentId,
+		Quantity:            warehousePosition.Quantity,
 	}
 }
 

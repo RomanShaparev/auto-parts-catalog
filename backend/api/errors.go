@@ -27,6 +27,8 @@ var (
 	ErrBadRequest          = &ErrResponse{HTTPStatusCode: 400, StatusText: "Bad request"}
 	ErrAlreadyExists       = &ErrResponse{HTTPStatusCode: 409, StatusText: "Already exists"}
 	ErrInternalServerError = &ErrResponse{HTTPStatusCode: 500, StatusText: "Internal Server Error"}
+
+	ErrBind = errors.New("Bind error")
 )
 
 func serviceToHttpError(err error) *ErrResponse {
