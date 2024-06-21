@@ -223,6 +223,23 @@ func (q *Queries) GetAutoPart(ctx context.Context, autoPartID int32) (AutoPart, 
 	return i, err
 }
 
+const getAutoPartComponent = `-- name: GetAutoPartComponent :one
+SELECT auto_part_component_id, auto_part_id, parent_auto_part_component_id, auto_part_component_name FROM auto_part_components
+WHERE auto_part_component_id = $1
+`
+
+func (q *Queries) GetAutoPartComponent(ctx context.Context, autoPartComponentID int32) (AutoPartComponent, error) {
+	row := q.db.QueryRow(ctx, getAutoPartComponent, autoPartComponentID)
+	var i AutoPartComponent
+	err := row.Scan(
+		&i.AutoPartComponentID,
+		&i.AutoPartID,
+		&i.ParentAutoPartComponentID,
+		&i.AutoPartComponentName,
+	)
+	return i, err
+}
+
 const getCarModel = `-- name: GetCarModel :one
 SELECT car_model_id, car_model_name FROM car_models
 WHERE car_model_id = $1
@@ -352,30 +369,25 @@ func (q *Queries) ListCountries(ctx context.Context) ([]Country, error) {
 	return items, nil
 }
 
-const listNonRootAutoPartComponents = `-- name: ListNonRootAutoPartComponents :many
-SELECT auto_part_component_id, auto_part_id, parent_auto_part_component_id, auto_part_component_name FROM auto_part_components
+const listNonRootAutoPartComponentIds = `-- name: ListNonRootAutoPartComponentIds :many
+SELECT auto_part_component_id FROM auto_part_components
 WHERE parent_auto_part_component_id = $1
 ORDER BY auto_part_component_name
 `
 
-func (q *Queries) ListNonRootAutoPartComponents(ctx context.Context, parentAutoPartComponentID pgtype.Int4) ([]AutoPartComponent, error) {
-	rows, err := q.db.Query(ctx, listNonRootAutoPartComponents, parentAutoPartComponentID)
+func (q *Queries) ListNonRootAutoPartComponentIds(ctx context.Context, parentAutoPartComponentID pgtype.Int4) ([]int32, error) {
+	rows, err := q.db.Query(ctx, listNonRootAutoPartComponentIds, parentAutoPartComponentID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []AutoPartComponent
+	var items []int32
 	for rows.Next() {
-		var i AutoPartComponent
-		if err := rows.Scan(
-			&i.AutoPartComponentID,
-			&i.AutoPartID,
-			&i.ParentAutoPartComponentID,
-			&i.AutoPartComponentName,
-		); err != nil {
+		var auto_part_component_id int32
+		if err := rows.Scan(&auto_part_component_id); err != nil {
 			return nil, err
 		}
-		items = append(items, i)
+		items = append(items, auto_part_component_id)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
@@ -383,30 +395,25 @@ func (q *Queries) ListNonRootAutoPartComponents(ctx context.Context, parentAutoP
 	return items, nil
 }
 
-const listRootAutoPartComponents = `-- name: ListRootAutoPartComponents :many
-SELECT auto_part_component_id, auto_part_id, parent_auto_part_component_id, auto_part_component_name FROM auto_part_components
+const listRootAutoPartComponentIds = `-- name: ListRootAutoPartComponentIds :many
+SELECT auto_part_component_id FROM auto_part_components
 WHERE auto_part_id = $1
 ORDER BY auto_part_component_name
 `
 
-func (q *Queries) ListRootAutoPartComponents(ctx context.Context, autoPartID pgtype.Int4) ([]AutoPartComponent, error) {
-	rows, err := q.db.Query(ctx, listRootAutoPartComponents, autoPartID)
+func (q *Queries) ListRootAutoPartComponentIds(ctx context.Context, autoPartID pgtype.Int4) ([]int32, error) {
+	rows, err := q.db.Query(ctx, listRootAutoPartComponentIds, autoPartID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []AutoPartComponent
+	var items []int32
 	for rows.Next() {
-		var i AutoPartComponent
-		if err := rows.Scan(
-			&i.AutoPartComponentID,
-			&i.AutoPartID,
-			&i.ParentAutoPartComponentID,
-			&i.AutoPartComponentName,
-		); err != nil {
+		var auto_part_component_id int32
+		if err := rows.Scan(&auto_part_component_id); err != nil {
 			return nil, err
 		}
-		items = append(items, i)
+		items = append(items, auto_part_component_id)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err

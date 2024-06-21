@@ -21,33 +21,34 @@ type AutoPartServiceServer struct {
 
 func storageToGrpcAutoPart(autoPart storage.AutoPart) *gen.AutoPart {
 	return &gen.AutoPart{
+		Id:           autoPart.Id,
+		CarModelId:   autoPart.CarModelId,
+		Name:         autoPart.Name,
+		ComponentIds: autoPart.ComponentIds,
+	}
+}
+
+func storageToGrpcAutoPartShell(autoPart storage.AutoPartShell) *gen.AutoPartShell {
+	return &gen.AutoPartShell{
 		Id:         autoPart.Id,
 		CarModelId: autoPart.CarModelId,
 		Name:       autoPart.Name,
 	}
 }
 
-func mapAutoPartStorageResult(autoPart storage.AutoPart, err error) (*gen.AutoPart, error) {
-	return storageToGrpcAutoPart(autoPart), errors.StorageToGrpcErr(err)
-}
-
-func mapAutoPartStorageResults(autoParts []storage.AutoPart, err error) (*gen.ListAutoPartsResponse, error) {
-	return &gen.ListAutoPartsResponse{AutoParts: mapping.Map(autoParts, storageToGrpcAutoPart)}, errors.PgToStorageErr(err)
-}
-
 func (s *AutoPartServiceServer) CreateAutoPart(ctx context.Context, request *gen.CreateAutoPartRequest) (*gen.AutoPart, error) {
 	autoPart, err := s.storage.CreateAutoPart(ctx, request.CarModelId, request.Name)
-	return mapAutoPartStorageResult(autoPart, err)
+	return storageToGrpcAutoPart(autoPart), errors.StorageToGrpcErr(err)
 }
 
 func (s *AutoPartServiceServer) GetAutoPart(ctx context.Context, request *gen.GetAutoPartRequest) (*gen.AutoPart, error) {
 	autoPart, err := s.storage.GetAutoPart(ctx, request.Id)
-	return mapAutoPartStorageResult(autoPart, err)
+	return storageToGrpcAutoPart(autoPart), errors.StorageToGrpcErr(err)
 }
 
 func (s *AutoPartServiceServer) ListAutoParts(ctx context.Context, request *gen.ListAutoPartsRequest) (*gen.ListAutoPartsResponse, error) {
 	autoParts, err := s.storage.ListAutoPartsByCarModelId(ctx, request.CarModelId)
-	return mapAutoPartStorageResults(autoParts, err)
+	return &gen.ListAutoPartsResponse{AutoParts: mapping.Map(autoParts, storageToGrpcAutoPartShell)}, errors.PgToStorageErr(err)
 }
 
 func (s *AutoPartServiceServer) DeleteAutoPart(ctx context.Context, request *gen.DeleteAutoPartRequest) (*emptypb.Empty, error) {

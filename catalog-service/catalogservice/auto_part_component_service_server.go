@@ -3,7 +3,6 @@ package catalogservice
 import (
 	"auto-parts-catalog/catalog-service/catalogservice/gen"
 	"auto-parts-catalog/catalog-service/errors"
-	"auto-parts-catalog/catalog-service/mapping"
 	"auto-parts-catalog/catalog-service/storage"
 	"context"
 
@@ -19,40 +18,27 @@ type AutoPartComponentServiceServer struct {
 	storage storage.AutoPartComponentStorage
 }
 
-func storageToGrpcRootAutoPartComponent(autoPartComponent storage.RootAutoPartComponent) *gen.RootAutoPartComponent {
-	return &gen.RootAutoPartComponent{
-		Id:         autoPartComponent.Id,
-		AutoPartId: autoPartComponent.AutoPartId,
-		Name:       autoPartComponent.Name,
+func storageToGrpcAutoPartComponent(autoPartComponent storage.AutoPartComponent) *gen.AutoPartComponent {
+	return &gen.AutoPartComponent{
+		Id:           autoPartComponent.Id,
+		Name:         autoPartComponent.Name,
+		ComponentIds: autoPartComponent.ComponentIds,
 	}
 }
 
-func storageToGrpcNonRootAutoPartComponent(autoPartComponent storage.NonRootAutoPartComponent) *gen.NonRootAutoPartComponent {
-	return &gen.NonRootAutoPartComponent{
-		Id:       autoPartComponent.Id,
-		ParentId: autoPartComponent.ParentId,
-		Name:     autoPartComponent.Name,
-	}
-}
-
-func (s *AutoPartComponentServiceServer) CreateRootAutoPartComponent(ctx context.Context, request *gen.CreateRootAutoPartComponentRequest) (*gen.RootAutoPartComponent, error) {
+func (s *AutoPartComponentServiceServer) CreateRootAutoPartComponent(ctx context.Context, request *gen.CreateRootAutoPartComponentRequest) (*gen.AutoPartComponent, error) {
 	autoPartComponent, err := s.storage.CreateRootAutoPartComponent(ctx, request.AutoPartId, request.Name)
-	return storageToGrpcRootAutoPartComponent(autoPartComponent), errors.StorageToGrpcErr(err)
+	return storageToGrpcAutoPartComponent(autoPartComponent), errors.StorageToGrpcErr(err)
 }
 
-func (s *AutoPartComponentServiceServer) CreateNonRootAutoPartComponent(ctx context.Context, request *gen.CreateNonRootAutoPartComponentRequest) (*gen.NonRootAutoPartComponent, error) {
+func (s *AutoPartComponentServiceServer) CreateNonRootAutoPartComponent(ctx context.Context, request *gen.CreateNonRootAutoPartComponentRequest) (*gen.AutoPartComponent, error) {
 	autoPartComponent, err := s.storage.CreateNonRootAutoPartComponent(ctx, request.ParentId, request.Name)
-	return storageToGrpcNonRootAutoPartComponent(autoPartComponent), errors.StorageToGrpcErr(err)
+	return storageToGrpcAutoPartComponent(autoPartComponent), errors.StorageToGrpcErr(err)
 }
 
-func (s *AutoPartComponentServiceServer) ListRootAutoPartComponents(ctx context.Context, request *gen.ListRootAutoPartComponentsRequest) (*gen.ListRootAutoPartComponentsResponse, error) {
-	autoPartComponents, err := s.storage.ListRootAutoPartComponents(ctx, request.AutoPartId)
-	return &gen.ListRootAutoPartComponentsResponse{AutoPartComponents: mapping.Map(autoPartComponents, storageToGrpcRootAutoPartComponent)}, errors.PgToStorageErr(err)
-}
-
-func (s *AutoPartComponentServiceServer) ListNonRootAutoPartComponents(ctx context.Context, request *gen.ListNonRootAutoPartComponentsRequest) (*gen.ListNonRootAutoPartComponentsResponse, error) {
-	autoPartComponents, err := s.storage.ListNonRootAutoPartComponents(ctx, request.ParentId)
-	return &gen.ListNonRootAutoPartComponentsResponse{AutoPartComponents: mapping.Map(autoPartComponents, storageToGrpcNonRootAutoPartComponent)}, errors.PgToStorageErr(err)
+func (s *AutoPartComponentServiceServer) GetAutoPartComponent(ctx context.Context, request *gen.GetAutoPartComponentRequest) (*gen.AutoPartComponent, error) {
+	autoPartComponent, err := s.storage.GetAutoPartComponent(ctx, request.Id)
+	return storageToGrpcAutoPartComponent(autoPartComponent), errors.StorageToGrpcErr(err)
 }
 
 func (s *AutoPartComponentServiceServer) UpdateAutoPartComponent(ctx context.Context, request *gen.UpdateAutoPartComponentRequest) (*emptypb.Empty, error) {

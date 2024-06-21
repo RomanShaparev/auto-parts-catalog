@@ -23,10 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AutoPartComponentServiceClient interface {
-	CreateRootAutoPartComponent(ctx context.Context, in *CreateRootAutoPartComponentRequest, opts ...grpc.CallOption) (*RootAutoPartComponent, error)
-	CreateNonRootAutoPartComponent(ctx context.Context, in *CreateNonRootAutoPartComponentRequest, opts ...grpc.CallOption) (*NonRootAutoPartComponent, error)
-	ListRootAutoPartComponents(ctx context.Context, in *ListRootAutoPartComponentsRequest, opts ...grpc.CallOption) (*ListRootAutoPartComponentsResponse, error)
-	ListNonRootAutoPartComponents(ctx context.Context, in *ListNonRootAutoPartComponentsRequest, opts ...grpc.CallOption) (*ListNonRootAutoPartComponentsResponse, error)
+	CreateRootAutoPartComponent(ctx context.Context, in *CreateRootAutoPartComponentRequest, opts ...grpc.CallOption) (*AutoPartComponent, error)
+	CreateNonRootAutoPartComponent(ctx context.Context, in *CreateNonRootAutoPartComponentRequest, opts ...grpc.CallOption) (*AutoPartComponent, error)
+	GetAutoPartComponent(ctx context.Context, in *GetAutoPartComponentRequest, opts ...grpc.CallOption) (*AutoPartComponent, error)
 	UpdateAutoPartComponent(ctx context.Context, in *UpdateAutoPartComponentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAutoPartComponent(ctx context.Context, in *DeleteAutoPartComponentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -39,8 +38,8 @@ func NewAutoPartComponentServiceClient(cc grpc.ClientConnInterface) AutoPartComp
 	return &autoPartComponentServiceClient{cc}
 }
 
-func (c *autoPartComponentServiceClient) CreateRootAutoPartComponent(ctx context.Context, in *CreateRootAutoPartComponentRequest, opts ...grpc.CallOption) (*RootAutoPartComponent, error) {
-	out := new(RootAutoPartComponent)
+func (c *autoPartComponentServiceClient) CreateRootAutoPartComponent(ctx context.Context, in *CreateRootAutoPartComponentRequest, opts ...grpc.CallOption) (*AutoPartComponent, error) {
+	out := new(AutoPartComponent)
 	err := c.cc.Invoke(ctx, "/gen.AutoPartComponentService/CreateRootAutoPartComponent", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *autoPartComponentServiceClient) CreateRootAutoPartComponent(ctx context
 	return out, nil
 }
 
-func (c *autoPartComponentServiceClient) CreateNonRootAutoPartComponent(ctx context.Context, in *CreateNonRootAutoPartComponentRequest, opts ...grpc.CallOption) (*NonRootAutoPartComponent, error) {
-	out := new(NonRootAutoPartComponent)
+func (c *autoPartComponentServiceClient) CreateNonRootAutoPartComponent(ctx context.Context, in *CreateNonRootAutoPartComponentRequest, opts ...grpc.CallOption) (*AutoPartComponent, error) {
+	out := new(AutoPartComponent)
 	err := c.cc.Invoke(ctx, "/gen.AutoPartComponentService/CreateNonRootAutoPartComponent", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -57,18 +56,9 @@ func (c *autoPartComponentServiceClient) CreateNonRootAutoPartComponent(ctx cont
 	return out, nil
 }
 
-func (c *autoPartComponentServiceClient) ListRootAutoPartComponents(ctx context.Context, in *ListRootAutoPartComponentsRequest, opts ...grpc.CallOption) (*ListRootAutoPartComponentsResponse, error) {
-	out := new(ListRootAutoPartComponentsResponse)
-	err := c.cc.Invoke(ctx, "/gen.AutoPartComponentService/ListRootAutoPartComponents", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *autoPartComponentServiceClient) ListNonRootAutoPartComponents(ctx context.Context, in *ListNonRootAutoPartComponentsRequest, opts ...grpc.CallOption) (*ListNonRootAutoPartComponentsResponse, error) {
-	out := new(ListNonRootAutoPartComponentsResponse)
-	err := c.cc.Invoke(ctx, "/gen.AutoPartComponentService/ListNonRootAutoPartComponents", in, out, opts...)
+func (c *autoPartComponentServiceClient) GetAutoPartComponent(ctx context.Context, in *GetAutoPartComponentRequest, opts ...grpc.CallOption) (*AutoPartComponent, error) {
+	out := new(AutoPartComponent)
+	err := c.cc.Invoke(ctx, "/gen.AutoPartComponentService/GetAutoPartComponent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -97,10 +87,9 @@ func (c *autoPartComponentServiceClient) DeleteAutoPartComponent(ctx context.Con
 // All implementations must embed UnimplementedAutoPartComponentServiceServer
 // for forward compatibility
 type AutoPartComponentServiceServer interface {
-	CreateRootAutoPartComponent(context.Context, *CreateRootAutoPartComponentRequest) (*RootAutoPartComponent, error)
-	CreateNonRootAutoPartComponent(context.Context, *CreateNonRootAutoPartComponentRequest) (*NonRootAutoPartComponent, error)
-	ListRootAutoPartComponents(context.Context, *ListRootAutoPartComponentsRequest) (*ListRootAutoPartComponentsResponse, error)
-	ListNonRootAutoPartComponents(context.Context, *ListNonRootAutoPartComponentsRequest) (*ListNonRootAutoPartComponentsResponse, error)
+	CreateRootAutoPartComponent(context.Context, *CreateRootAutoPartComponentRequest) (*AutoPartComponent, error)
+	CreateNonRootAutoPartComponent(context.Context, *CreateNonRootAutoPartComponentRequest) (*AutoPartComponent, error)
+	GetAutoPartComponent(context.Context, *GetAutoPartComponentRequest) (*AutoPartComponent, error)
 	UpdateAutoPartComponent(context.Context, *UpdateAutoPartComponentRequest) (*emptypb.Empty, error)
 	DeleteAutoPartComponent(context.Context, *DeleteAutoPartComponentRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedAutoPartComponentServiceServer()
@@ -110,17 +99,14 @@ type AutoPartComponentServiceServer interface {
 type UnimplementedAutoPartComponentServiceServer struct {
 }
 
-func (UnimplementedAutoPartComponentServiceServer) CreateRootAutoPartComponent(context.Context, *CreateRootAutoPartComponentRequest) (*RootAutoPartComponent, error) {
+func (UnimplementedAutoPartComponentServiceServer) CreateRootAutoPartComponent(context.Context, *CreateRootAutoPartComponentRequest) (*AutoPartComponent, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRootAutoPartComponent not implemented")
 }
-func (UnimplementedAutoPartComponentServiceServer) CreateNonRootAutoPartComponent(context.Context, *CreateNonRootAutoPartComponentRequest) (*NonRootAutoPartComponent, error) {
+func (UnimplementedAutoPartComponentServiceServer) CreateNonRootAutoPartComponent(context.Context, *CreateNonRootAutoPartComponentRequest) (*AutoPartComponent, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateNonRootAutoPartComponent not implemented")
 }
-func (UnimplementedAutoPartComponentServiceServer) ListRootAutoPartComponents(context.Context, *ListRootAutoPartComponentsRequest) (*ListRootAutoPartComponentsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListRootAutoPartComponents not implemented")
-}
-func (UnimplementedAutoPartComponentServiceServer) ListNonRootAutoPartComponents(context.Context, *ListNonRootAutoPartComponentsRequest) (*ListNonRootAutoPartComponentsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListNonRootAutoPartComponents not implemented")
+func (UnimplementedAutoPartComponentServiceServer) GetAutoPartComponent(context.Context, *GetAutoPartComponentRequest) (*AutoPartComponent, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAutoPartComponent not implemented")
 }
 func (UnimplementedAutoPartComponentServiceServer) UpdateAutoPartComponent(context.Context, *UpdateAutoPartComponentRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAutoPartComponent not implemented")
@@ -178,38 +164,20 @@ func _AutoPartComponentService_CreateNonRootAutoPartComponent_Handler(srv interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AutoPartComponentService_ListRootAutoPartComponents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRootAutoPartComponentsRequest)
+func _AutoPartComponentService_GetAutoPartComponent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAutoPartComponentRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AutoPartComponentServiceServer).ListRootAutoPartComponents(ctx, in)
+		return srv.(AutoPartComponentServiceServer).GetAutoPartComponent(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gen.AutoPartComponentService/ListRootAutoPartComponents",
+		FullMethod: "/gen.AutoPartComponentService/GetAutoPartComponent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AutoPartComponentServiceServer).ListRootAutoPartComponents(ctx, req.(*ListRootAutoPartComponentsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AutoPartComponentService_ListNonRootAutoPartComponents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListNonRootAutoPartComponentsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AutoPartComponentServiceServer).ListNonRootAutoPartComponents(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/gen.AutoPartComponentService/ListNonRootAutoPartComponents",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AutoPartComponentServiceServer).ListNonRootAutoPartComponents(ctx, req.(*ListNonRootAutoPartComponentsRequest))
+		return srv.(AutoPartComponentServiceServer).GetAutoPartComponent(ctx, req.(*GetAutoPartComponentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -266,12 +234,8 @@ var AutoPartComponentService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AutoPartComponentService_CreateNonRootAutoPartComponent_Handler,
 		},
 		{
-			MethodName: "ListRootAutoPartComponents",
-			Handler:    _AutoPartComponentService_ListRootAutoPartComponents_Handler,
-		},
-		{
-			MethodName: "ListNonRootAutoPartComponents",
-			Handler:    _AutoPartComponentService_ListNonRootAutoPartComponents_Handler,
+			MethodName: "GetAutoPartComponent",
+			Handler:    _AutoPartComponentService_GetAutoPartComponent_Handler,
 		},
 		{
 			MethodName: "UpdateAutoPartComponent",

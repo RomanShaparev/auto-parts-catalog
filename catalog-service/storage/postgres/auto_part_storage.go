@@ -6,6 +6,8 @@ import (
 	"auto-parts-catalog/catalog-service/postgres/queries"
 	"auto-parts-catalog/catalog-service/storage"
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 func NewAutoPartStorage(queries *queries.Queries) *AutoPartStorage {
@@ -16,35 +18,40 @@ type AutoPartStorage struct {
 	queries *queries.Queries
 }
 
-func pgToStorageAutoPart(autoPart queries.AutoPart) storage.AutoPart {
-	return storage.AutoPart{
+func pgToStorageAutoPartShell(autoPart queries.AutoPart) storage.AutoPartShell {
+	return storage.AutoPartShell{
 		Id:         autoPart.AutoPartID,
 		CarModelId: autoPart.CarModelID,
 		Name:       autoPart.AutoPartName,
 	}
 }
 
-func mapAutoPartQueryResult(autoPart queries.AutoPart, err error) (storage.AutoPart, error) {
-	return pgToStorageAutoPart(autoPart), errors.PgToStorageErr(err)
-}
-
-func mapAutoPartQueryResults(autoParts []queries.AutoPart, err error) ([]storage.AutoPart, error) {
-	return mapping.Map(autoParts, pgToStorageAutoPart), errors.PgToStorageErr(err)
+func pgToStorageAutoPart(autoPart queries.AutoPart, componentIds []int32) storage.AutoPart {
+	return storage.AutoPart{
+		Id:           autoPart.AutoPartID,
+		CarModelId:   autoPart.CarModelID,
+		Name:         autoPart.AutoPartName,
+		ComponentIds: componentIds,
+	}
 }
 
 func (s *AutoPartStorage) CreateAutoPart(ctx context.Context, carModelId int32, name string) (storage.AutoPart, error) {
 	autoPart, err := s.queries.CreateAutoPart(ctx, queries.CreateAutoPartParams{CarModelID: carModelId, AutoPartName: name})
-	return mapAutoPartQueryResult(autoPart, err)
+	return pgToStorageAutoPart(autoPart, []int32{}), errors.PgToStorageErr(err)
 }
 
 func (s *AutoPartStorage) GetAutoPart(ctx context.Context, id int32) (storage.AutoPart, error) {
 	autoPart, err := s.queries.GetAutoPart(ctx, id)
-	return mapAutoPartQueryResult(autoPart, err)
+	if err != nil {
+		return storage.AutoPart{}, errors.PgToStorageErr(err)
+	}
+	componentIds, err := s.queries.ListRootAutoPartComponentIds(ctx, pgtype.Int4{Int32: id, Valid: true})
+	return pgToStorageAutoPart(autoPart, componentIds), errors.PgToStorageErr(err)
 }
 
-func (s *AutoPartStorage) ListAutoPartsByCarModelId(ctx context.Context, carModelId int32) ([]storage.AutoPart, error) {
+func (s *AutoPartStorage) ListAutoPartsByCarModelId(ctx context.Context, carModelId int32) ([]storage.AutoPartShell, error) {
 	autoParts, err := s.queries.ListAutoPartsByCarModelId(ctx, carModelId)
-	return mapAutoPartQueryResults(autoParts, err)
+	return mapping.Map(autoParts, pgToStorageAutoPartShell), errors.PgToStorageErr(err)
 }
 
 func (s *AutoPartStorage) DeleteAutoPart(ctx context.Context, id int32) error {

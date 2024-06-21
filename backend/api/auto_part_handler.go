@@ -10,17 +10,37 @@ import (
 	"github.com/go-chi/render"
 )
 
-type AutoPart struct {
+type AutoPartShell struct {
 	Id         int32  `json:"id"`
 	CarModelId int32  `json:"carModelId"`
 	Name       string `json:"name"`
 }
 
-func newAutoPart(autoPart catalogservice.AutoPart) render.Renderer {
-	return AutoPart{
+func newAutoPartShell(autoPart catalogservice.AutoPartShell) render.Renderer {
+	return AutoPartShell{
 		Id:         autoPart.Id,
 		CarModelId: autoPart.CarModelId,
 		Name:       autoPart.Name,
+	}
+}
+
+func (AutoPartShell) Render(w http.ResponseWriter, r *http.Request) error {
+	return nil
+}
+
+type AutoPart struct {
+	Id           int32   `json:"id"`
+	CarModelId   int32   `json:"carModelId"`
+	Name         string  `json:"name"`
+	ComponentIds []int32 `json:"componentIds"`
+}
+
+func newAutoPart(autoPart catalogservice.AutoPart) render.Renderer {
+	return AutoPart{
+		Id:           autoPart.Id,
+		CarModelId:   autoPart.CarModelId,
+		Name:         autoPart.Name,
+		ComponentIds: autoPart.ComponentIds,
 	}
 }
 
@@ -91,7 +111,7 @@ func (s *Server) handleListAutoParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.RenderList(w, r, mapping.Map(autoParts, newAutoPart))
+	render.RenderList(w, r, mapping.Map(autoParts, newAutoPartShell))
 }
 
 func (s *Server) handleDeleteAutoPart(w http.ResponseWriter, r *http.Request) {

@@ -104,13 +104,17 @@ INSERT INTO auto_part_components (
 )
 RETURNING *;
 
--- name: ListRootAutoPartComponents :many
+-- name: GetAutoPartComponent :one
 SELECT * FROM auto_part_components
+WHERE auto_part_component_id = $1;
+
+-- name: ListRootAutoPartComponentIds :many
+SELECT auto_part_component_id FROM auto_part_components
 WHERE auto_part_id = $1
 ORDER BY auto_part_component_name;
 
--- name: ListNonRootAutoPartComponents :many
-SELECT * FROM auto_part_components
+-- name: ListNonRootAutoPartComponentIds :many
+SELECT auto_part_component_id FROM auto_part_components
 WHERE parent_auto_part_component_id = $1
 ORDER BY auto_part_component_name;
 

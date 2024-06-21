@@ -26,15 +26,14 @@ type CarModelStorage interface {
 type AutoPartStorage interface {
 	CreateAutoPart(ctx context.Context, carModelId int32, name string) (AutoPart, error)
 	GetAutoPart(ctx context.Context, id int32) (AutoPart, error)
-	ListAutoPartsByCarModelId(ctx context.Context, carModelId int32) ([]AutoPart, error)
+	ListAutoPartsByCarModelId(ctx context.Context, carModelId int32) ([]AutoPartShell, error)
 	DeleteAutoPart(ctx context.Context, id int32) error
 }
 
 type AutoPartComponentStorage interface {
-	CreateRootAutoPartComponent(ctx context.Context, autoPartId int32, name string) (RootAutoPartComponent, error)
-	CreateNonRootAutoPartComponent(ctx context.Context, parentId int32, name string) (NonRootAutoPartComponent, error)
-	ListRootAutoPartComponents(ctx context.Context, autoPartId int32) ([]RootAutoPartComponent, error)
-	ListNonRootAutoPartComponents(ctx context.Context, parentId int32) ([]NonRootAutoPartComponent, error)
+	CreateRootAutoPartComponent(ctx context.Context, autoPartId int32, name string) (AutoPartComponent, error)
+	CreateNonRootAutoPartComponent(ctx context.Context, parentId int32, name string) (AutoPartComponent, error)
+	GetAutoPartComponent(ctx context.Context, id int32) (AutoPartComponent, error)
 	UpdateAutoPartComponent(ctx context.Context, id int32, name string) error
 	DeleteAutoPartComponent(ctx context.Context, id int32) error
 }
@@ -60,22 +59,23 @@ type CarModel struct {
 	Name string
 }
 
-type AutoPart struct {
+type AutoPartShell struct {
 	Id         int32
 	CarModelId int32
 	Name       string
 }
 
-type RootAutoPartComponent struct {
-	Id         int32
-	AutoPartId int32
-	Name       string
+type AutoPart struct {
+	Id           int32
+	CarModelId   int32
+	Name         string
+	ComponentIds []int32
 }
 
-type NonRootAutoPartComponent struct {
-	Id       int32
-	ParentId int32
-	Name     string
+type AutoPartComponent struct {
+	Id           int32
+	Name         string
+	ComponentIds []int32
 }
 
 type WarehousePosition struct {

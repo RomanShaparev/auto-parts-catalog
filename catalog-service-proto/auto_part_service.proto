@@ -27,15 +27,22 @@ message ListAutoPartsRequest {
 }
  
 message ListAutoPartsResponse {
-  repeated AutoPart AutoParts = 1;
+  repeated AutoPartShell AutoParts = 1;
 }
  
 message DeleteAutoPartRequest {
   int32 id = 1;
 }
  
+message AutoPartShell {
+  int32 id = 1;
+  int32 car_model_id = 2;
+  string name = 3;
+}
+ 
 message AutoPart {
   int32 id = 1;
   int32 car_model_id = 2;
   string name = 3;
+  repeated int32 componentIds = 4;
 }

@@ -15,15 +15,28 @@ type AutoPartService struct {
 	client gen.AutoPartServiceClient
 }
 
+func grpcToServiceAutoPartShell(autoPart *gen.AutoPartShell) catalogservice.AutoPartShell {
+	if autoPart == nil {
+		return catalogservice.AutoPartShell{}
+	}
+
+	return catalogservice.AutoPartShell{
+		Id:         autoPart.Id,
+		CarModelId: autoPart.CarModelId,
+		Name:       autoPart.Name,
+	}
+}
+
 func grpcToServiceAutoPart(autoPart *gen.AutoPart) catalogservice.AutoPart {
 	if autoPart == nil {
 		return catalogservice.AutoPart{}
 	}
 
 	return catalogservice.AutoPart{
-		Id:         autoPart.Id,
-		CarModelId: autoPart.CarModelId,
-		Name:       autoPart.Name,
+		Id:           autoPart.Id,
+		CarModelId:   autoPart.CarModelId,
+		Name:         autoPart.Name,
+		ComponentIds: autoPart.ComponentIds,
 	}
 }
 
@@ -37,9 +50,9 @@ func (s *AutoPartService) GetAutoPart(ctx context.Context, id int32) (catalogser
 	return grpcToServiceAutoPart(autoPart), grpcToServiceErr(err)
 }
 
-func (s *AutoPartService) ListAutoPartsByCarModelId(ctx context.Context, carModelId int32) ([]catalogservice.AutoPart, error) {
+func (s *AutoPartService) ListAutoPartsByCarModelId(ctx context.Context, carModelId int32) ([]catalogservice.AutoPartShell, error) {
 	autoParts, err := s.client.ListAutoParts(ctx, &gen.ListAutoPartsRequest{CarModelId: carModelId})
-	return mapping.Map(autoParts.AutoParts, grpcToServiceAutoPart), grpcToServiceErr(err)
+	return mapping.Map(autoParts.AutoParts, grpcToServiceAutoPartShell), grpcToServiceErr(err)
 }
 
 func (s *AutoPartService) DeleteAutoPart(ctx context.Context, id int32) error {

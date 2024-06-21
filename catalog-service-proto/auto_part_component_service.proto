@@ -7,10 +7,9 @@ package gen;
 import "google/protobuf/empty.proto";
 
 service AutoPartComponentService {
-  rpc CreateRootAutoPartComponent(CreateRootAutoPartComponentRequest) returns (RootAutoPartComponent);
-  rpc CreateNonRootAutoPartComponent(CreateNonRootAutoPartComponentRequest) returns (NonRootAutoPartComponent);
-  rpc ListRootAutoPartComponents(ListRootAutoPartComponentsRequest) returns (ListRootAutoPartComponentsResponse);
-  rpc ListNonRootAutoPartComponents(ListNonRootAutoPartComponentsRequest) returns (ListNonRootAutoPartComponentsResponse);
+  rpc CreateRootAutoPartComponent(CreateRootAutoPartComponentRequest) returns (AutoPartComponent);
+  rpc CreateNonRootAutoPartComponent(CreateNonRootAutoPartComponentRequest) returns (AutoPartComponent);
+  rpc GetAutoPartComponent(GetAutoPartComponentRequest) returns (AutoPartComponent);
   rpc UpdateAutoPartComponent(UpdateAutoPartComponentRequest) returns (google.protobuf.Empty);
   rpc DeleteAutoPartComponent(DeleteAutoPartComponentRequest) returns (google.protobuf.Empty);
 }
@@ -25,20 +24,8 @@ message CreateNonRootAutoPartComponentRequest {
   string name = 2;
 }
 
-message ListRootAutoPartComponentsRequest {
-  int32 auto_part_id = 1;
-}
- 
-message ListRootAutoPartComponentsResponse {
-  repeated RootAutoPartComponent AutoPartComponents = 1;
-}
-
-message ListNonRootAutoPartComponentsRequest {
-  int32 parent_id = 1;
-}
- 
-message ListNonRootAutoPartComponentsResponse {
-  repeated NonRootAutoPartComponent AutoPartComponents = 1;
+message GetAutoPartComponentRequest {
+  int32 id = 1;
 }
  
 message UpdateAutoPartComponentRequest {
@@ -50,14 +37,8 @@ message DeleteAutoPartComponentRequest {
   int32 id = 1;
 }
  
-message RootAutoPartComponent {
+message AutoPartComponent {
   int32 id = 1;
-  int32 auto_part_id = 2;
-  string name = 3;
-}
-
-message NonRootAutoPartComponent {
-  int32 id = 1;
-  int32 parent_id = 2;
-  string name = 3;
+  string name = 2;
+  repeated int32 componentIds = 3;
 }
