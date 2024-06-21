@@ -1,7 +1,6 @@
 package postgres
 
 import (
-	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/mapping"
 	"auto-parts-catalog/catalog-service/storage"
 	"auto-parts-catalog/catalog-service/storage/postgres/queries"
@@ -25,11 +24,11 @@ func pgToStorageWarehouse(warehouse queries.Warehouse) storage.Warehouse {
 }
 
 func mapWarehouseQueryResult(warehouse queries.Warehouse, err error) (storage.Warehouse, error) {
-	return pgToStorageWarehouse(warehouse), errors.PgToStorageErr(err)
+	return pgToStorageWarehouse(warehouse), PgToStorageErr(err)
 }
 
 func mapWarehouseQueryResults(warehouses []queries.Warehouse, err error) ([]storage.Warehouse, error) {
-	return mapping.Map(warehouses, pgToStorageWarehouse), errors.PgToStorageErr(err)
+	return mapping.Map(warehouses, pgToStorageWarehouse), PgToStorageErr(err)
 }
 
 func (s *WarehouseStorage) CreateWarehouse(ctx context.Context, countryId int32, cityName string) (storage.Warehouse, error) {
@@ -49,5 +48,5 @@ func (s *WarehouseStorage) ListWarehousesByCountryId(ctx context.Context, countr
 
 func (s *WarehouseStorage) DeleteWarehouse(ctx context.Context, id int32) error {
 	err := s.queries.DeleteWarehouse(ctx, id)
-	return errors.PgToStorageErr(err)
+	return PgToStorageErr(err)
 }

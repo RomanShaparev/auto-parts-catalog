@@ -1,8 +1,7 @@
-package catalogservice
+package grpc
 
 import (
 	"auto-parts-catalog/catalog-service/api/grpc/gen"
-	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/mapping"
 	"auto-parts-catalog/catalog-service/storage"
 	"context"
@@ -27,11 +26,11 @@ func storageToGrpcCountry(country storage.Country) *gen.Country {
 }
 
 func mapCountryStorageResult(country storage.Country, err error) (*gen.Country, error) {
-	return storageToGrpcCountry(country), errors.StorageToGrpcErr(err)
+	return storageToGrpcCountry(country), StorageToGrpcErr(err)
 }
 
 func mapCountryStorageResults(countries []storage.Country, err error) (*gen.ListCountriesResponse, error) {
-	return &gen.ListCountriesResponse{Countries: mapping.Map(countries, storageToGrpcCountry)}, errors.PgToStorageErr(err)
+	return &gen.ListCountriesResponse{Countries: mapping.Map(countries, storageToGrpcCountry)}, StorageToGrpcErr(err)
 }
 
 func (s *CountryServiceServer) CreateCountry(ctx context.Context, request *gen.CreateCountryRequest) (*gen.Country, error) {
@@ -51,5 +50,5 @@ func (s *CountryServiceServer) ListCountries(ctx context.Context, request *empty
 
 func (s *CountryServiceServer) DeleteCountry(ctx context.Context, request *gen.DeleteCountryRequest) (*emptypb.Empty, error) {
 	err := s.storage.DeleteCountry(ctx, request.Id)
-	return &emptypb.Empty{}, errors.StorageToGrpcErr(err)
+	return &emptypb.Empty{}, StorageToGrpcErr(err)
 }

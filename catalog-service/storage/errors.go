@@ -1,4 +1,4 @@
-package errors
+package storage
 
 type StorageError struct {
 	Code    StorageErrorCode

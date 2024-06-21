@@ -1,7 +1,6 @@
 package postgres
 
 import (
-	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/storage"
 	"auto-parts-catalog/catalog-service/storage/postgres/queries"
 	"context"
@@ -30,7 +29,7 @@ func (s *AutoPartComponentStorage) CreateRootAutoPartComponent(ctx context.Conte
 		AutoPartID:            pgtype.Int4{Int32: autoPartId, Valid: true},
 		AutoPartComponentName: name,
 	})
-	return pgToStorageAutoPartComponent(autoPartComponent, []int32{}), errors.PgToStorageErr(err)
+	return pgToStorageAutoPartComponent(autoPartComponent, []int32{}), PgToStorageErr(err)
 }
 
 func (s *AutoPartComponentStorage) CreateNonRootAutoPartComponent(ctx context.Context, parentId int32, name string) (storage.AutoPartComponent, error) {
@@ -38,16 +37,16 @@ func (s *AutoPartComponentStorage) CreateNonRootAutoPartComponent(ctx context.Co
 		ParentAutoPartComponentID: pgtype.Int4{Int32: parentId, Valid: true},
 		AutoPartComponentName:     name,
 	})
-	return pgToStorageAutoPartComponent(autoPartComponent, []int32{}), errors.PgToStorageErr(err)
+	return pgToStorageAutoPartComponent(autoPartComponent, []int32{}), PgToStorageErr(err)
 }
 
 func (s *AutoPartComponentStorage) GetAutoPartComponent(ctx context.Context, id int32) (storage.AutoPartComponent, error) {
 	autoPartComponent, err := s.queries.GetAutoPartComponent(ctx, id)
 	if err != nil {
-		return storage.AutoPartComponent{}, errors.PgToStorageErr(err)
+		return storage.AutoPartComponent{}, PgToStorageErr(err)
 	}
 	componentIds, err := s.queries.ListNonRootAutoPartComponentIds(ctx, pgtype.Int4{Int32: id, Valid: true})
-	return pgToStorageAutoPartComponent(autoPartComponent, componentIds), errors.PgToStorageErr(err)
+	return pgToStorageAutoPartComponent(autoPartComponent, componentIds), PgToStorageErr(err)
 }
 
 func (s *AutoPartComponentStorage) UpdateAutoPartComponent(ctx context.Context, id int32, name string) error {
@@ -55,10 +54,10 @@ func (s *AutoPartComponentStorage) UpdateAutoPartComponent(ctx context.Context, 
 		AutoPartComponentID:   id,
 		AutoPartComponentName: name,
 	})
-	return errors.PgToStorageErr(err)
+	return PgToStorageErr(err)
 }
 
 func (s *AutoPartComponentStorage) DeleteAutoPartComponent(ctx context.Context, id int32) error {
 	err := s.queries.DeleteAutoPartComponent(ctx, id)
-	return errors.PgToStorageErr(err)
+	return PgToStorageErr(err)
 }

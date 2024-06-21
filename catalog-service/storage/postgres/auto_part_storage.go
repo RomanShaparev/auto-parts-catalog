@@ -1,7 +1,6 @@
 package postgres
 
 import (
-	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/mapping"
 	"auto-parts-catalog/catalog-service/storage"
 	"auto-parts-catalog/catalog-service/storage/postgres/queries"
@@ -37,24 +36,24 @@ func pgToStorageAutoPart(autoPart queries.AutoPart, componentIds []int32) storag
 
 func (s *AutoPartStorage) CreateAutoPart(ctx context.Context, carModelId int32, name string) (storage.AutoPart, error) {
 	autoPart, err := s.queries.CreateAutoPart(ctx, queries.CreateAutoPartParams{CarModelID: carModelId, AutoPartName: name})
-	return pgToStorageAutoPart(autoPart, []int32{}), errors.PgToStorageErr(err)
+	return pgToStorageAutoPart(autoPart, []int32{}), PgToStorageErr(err)
 }
 
 func (s *AutoPartStorage) GetAutoPart(ctx context.Context, id int32) (storage.AutoPart, error) {
 	autoPart, err := s.queries.GetAutoPart(ctx, id)
 	if err != nil {
-		return storage.AutoPart{}, errors.PgToStorageErr(err)
+		return storage.AutoPart{}, PgToStorageErr(err)
 	}
 	componentIds, err := s.queries.ListRootAutoPartComponentIds(ctx, pgtype.Int4{Int32: id, Valid: true})
-	return pgToStorageAutoPart(autoPart, componentIds), errors.PgToStorageErr(err)
+	return pgToStorageAutoPart(autoPart, componentIds), PgToStorageErr(err)
 }
 
 func (s *AutoPartStorage) ListAutoPartsByCarModelId(ctx context.Context, carModelId int32) ([]storage.AutoPartShell, error) {
 	autoParts, err := s.queries.ListAutoPartsByCarModelId(ctx, carModelId)
-	return mapping.Map(autoParts, pgToStorageAutoPartShell), errors.PgToStorageErr(err)
+	return mapping.Map(autoParts, pgToStorageAutoPartShell), PgToStorageErr(err)
 }
 
 func (s *AutoPartStorage) DeleteAutoPart(ctx context.Context, id int32) error {
 	err := s.queries.DeleteAutoPart(ctx, id)
-	return errors.PgToStorageErr(err)
+	return PgToStorageErr(err)
 }

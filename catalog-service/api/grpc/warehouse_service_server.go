@@ -1,8 +1,7 @@
-package catalogservice
+package grpc
 
 import (
 	"auto-parts-catalog/catalog-service/api/grpc/gen"
-	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/mapping"
 	"auto-parts-catalog/catalog-service/storage"
 	"context"
@@ -28,11 +27,11 @@ func storageToGrpcWarehouse(warehouse storage.Warehouse) *gen.Warehouse {
 }
 
 func mapWarehouseStorageResult(warehouse storage.Warehouse, err error) (*gen.Warehouse, error) {
-	return storageToGrpcWarehouse(warehouse), errors.StorageToGrpcErr(err)
+	return storageToGrpcWarehouse(warehouse), StorageToGrpcErr(err)
 }
 
 func mapWarehouseStorageResults(warehouses []storage.Warehouse, err error) (*gen.ListWarehousesResponse, error) {
-	return &gen.ListWarehousesResponse{Warehouses: mapping.Map(warehouses, storageToGrpcWarehouse)}, errors.PgToStorageErr(err)
+	return &gen.ListWarehousesResponse{Warehouses: mapping.Map(warehouses, storageToGrpcWarehouse)}, StorageToGrpcErr(err)
 }
 
 func (s *WarehouseServiceServer) CreateWarehouse(ctx context.Context, request *gen.CreateWarehouseRequest) (*gen.Warehouse, error) {
@@ -52,5 +51,5 @@ func (s *WarehouseServiceServer) ListWarehouses(ctx context.Context, request *ge
 
 func (s *WarehouseServiceServer) DeleteWarehouse(ctx context.Context, request *gen.DeleteWarehouseRequest) (*emptypb.Empty, error) {
 	err := s.storage.DeleteWarehouse(ctx, request.Id)
-	return &emptypb.Empty{}, errors.StorageToGrpcErr(err)
+	return &emptypb.Empty{}, StorageToGrpcErr(err)
 }

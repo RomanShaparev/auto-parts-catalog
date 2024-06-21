@@ -1,8 +1,7 @@
-package catalogservice
+package grpc
 
 import (
 	"auto-parts-catalog/catalog-service/api/grpc/gen"
-	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/mapping"
 	"auto-parts-catalog/catalog-service/storage"
 	"context"
@@ -27,11 +26,11 @@ func storageToGrpcCarModel(carModel storage.CarModel) *gen.CarModel {
 }
 
 func mapCarModelStorageResult(carModel storage.CarModel, err error) (*gen.CarModel, error) {
-	return storageToGrpcCarModel(carModel), errors.StorageToGrpcErr(err)
+	return storageToGrpcCarModel(carModel), StorageToGrpcErr(err)
 }
 
 func mapCarModelStorageResults(carModels []storage.CarModel, err error) (*gen.ListCarModelsResponse, error) {
-	return &gen.ListCarModelsResponse{CarModels: mapping.Map(carModels, storageToGrpcCarModel)}, errors.PgToStorageErr(err)
+	return &gen.ListCarModelsResponse{CarModels: mapping.Map(carModels, storageToGrpcCarModel)}, StorageToGrpcErr(err)
 }
 
 func (s *CarModelServiceServer) CreateCarModel(ctx context.Context, request *gen.CreateCarModelRequest) (*gen.CarModel, error) {
@@ -51,5 +50,5 @@ func (s *CarModelServiceServer) ListCarModels(ctx context.Context, request *empt
 
 func (s *CarModelServiceServer) DeleteCarModel(ctx context.Context, request *gen.DeleteCarModelRequest) (*emptypb.Empty, error) {
 	err := s.storage.DeleteCarModel(ctx, request.Id)
-	return &emptypb.Empty{}, errors.StorageToGrpcErr(err)
+	return &emptypb.Empty{}, StorageToGrpcErr(err)
 }

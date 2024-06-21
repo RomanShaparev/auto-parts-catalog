@@ -1,7 +1,6 @@
 package postgres
 
 import (
-	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/mapping"
 	"auto-parts-catalog/catalog-service/storage"
 	"auto-parts-catalog/catalog-service/storage/postgres/queries"
@@ -24,11 +23,11 @@ func pgToStorageCarModel(carModel queries.CarModel) storage.CarModel {
 }
 
 func mapCarModelQueryResult(carModel queries.CarModel, err error) (storage.CarModel, error) {
-	return pgToStorageCarModel(carModel), errors.PgToStorageErr(err)
+	return pgToStorageCarModel(carModel), PgToStorageErr(err)
 }
 
 func mapCarModelQueryResults(carModels []queries.CarModel, err error) ([]storage.CarModel, error) {
-	return mapping.Map(carModels, pgToStorageCarModel), errors.PgToStorageErr(err)
+	return mapping.Map(carModels, pgToStorageCarModel), PgToStorageErr(err)
 }
 
 func (s *CarModelStorage) CreateCarModel(ctx context.Context, name string) (storage.CarModel, error) {
@@ -48,5 +47,5 @@ func (s *CarModelStorage) ListCarModels(ctx context.Context) ([]storage.CarModel
 
 func (s *CarModelStorage) DeleteCarModel(ctx context.Context, id int32) error {
 	err := s.queries.DeleteCarModel(ctx, id)
-	return errors.PgToStorageErr(err)
+	return PgToStorageErr(err)
 }

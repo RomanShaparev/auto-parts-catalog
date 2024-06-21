@@ -1,8 +1,7 @@
-package catalogservice
+package grpc
 
 import (
 	"auto-parts-catalog/catalog-service/api/grpc/gen"
-	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/storage"
 	"context"
 )
@@ -25,7 +24,7 @@ func storageToGrpcWarehousePosition(warehousePosition storage.WarehousePosition)
 }
 
 func mapWarehousePositionStorageResult(warehousePosition storage.WarehousePosition, err error) (*gen.WarehousePosition, error) {
-	return storageToGrpcWarehousePosition(warehousePosition), errors.StorageToGrpcErr(err)
+	return storageToGrpcWarehousePosition(warehousePosition), StorageToGrpcErr(err)
 }
 
 func (s *WarehousePositionServiceServer) CreateOrUpdateWarehousePosition(ctx context.Context, request *gen.CreateOrUpdateWarehousePositionRequest) (*gen.WarehousePosition, error) {

@@ -1,8 +1,7 @@
-package catalogservice
+package grpc
 
 import (
 	"auto-parts-catalog/catalog-service/api/grpc/gen"
-	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/storage"
 	"context"
 
@@ -28,25 +27,25 @@ func storageToGrpcAutoPartComponent(autoPartComponent storage.AutoPartComponent)
 
 func (s *AutoPartComponentServiceServer) CreateRootAutoPartComponent(ctx context.Context, request *gen.CreateRootAutoPartComponentRequest) (*gen.AutoPartComponent, error) {
 	autoPartComponent, err := s.storage.CreateRootAutoPartComponent(ctx, request.AutoPartId, request.Name)
-	return storageToGrpcAutoPartComponent(autoPartComponent), errors.StorageToGrpcErr(err)
+	return storageToGrpcAutoPartComponent(autoPartComponent), StorageToGrpcErr(err)
 }
 
 func (s *AutoPartComponentServiceServer) CreateNonRootAutoPartComponent(ctx context.Context, request *gen.CreateNonRootAutoPartComponentRequest) (*gen.AutoPartComponent, error) {
 	autoPartComponent, err := s.storage.CreateNonRootAutoPartComponent(ctx, request.ParentId, request.Name)
-	return storageToGrpcAutoPartComponent(autoPartComponent), errors.StorageToGrpcErr(err)
+	return storageToGrpcAutoPartComponent(autoPartComponent), StorageToGrpcErr(err)
 }
 
 func (s *AutoPartComponentServiceServer) GetAutoPartComponent(ctx context.Context, request *gen.GetAutoPartComponentRequest) (*gen.AutoPartComponent, error) {
 	autoPartComponent, err := s.storage.GetAutoPartComponent(ctx, request.Id)
-	return storageToGrpcAutoPartComponent(autoPartComponent), errors.StorageToGrpcErr(err)
+	return storageToGrpcAutoPartComponent(autoPartComponent), StorageToGrpcErr(err)
 }
 
 func (s *AutoPartComponentServiceServer) UpdateAutoPartComponent(ctx context.Context, request *gen.UpdateAutoPartComponentRequest) (*emptypb.Empty, error) {
 	err := s.storage.UpdateAutoPartComponent(ctx, request.Id, request.Name)
-	return &emptypb.Empty{}, errors.StorageToGrpcErr(err)
+	return &emptypb.Empty{}, StorageToGrpcErr(err)
 }
 
 func (s *AutoPartComponentServiceServer) DeleteAutoPartComponent(ctx context.Context, request *gen.DeleteAutoPartComponentRequest) (*emptypb.Empty, error) {
 	err := s.storage.DeleteAutoPartComponent(ctx, request.Id)
-	return &emptypb.Empty{}, errors.StorageToGrpcErr(err)
+	return &emptypb.Empty{}, StorageToGrpcErr(err)
 }

@@ -1,7 +1,6 @@
 package postgres
 
 import (
-	"auto-parts-catalog/catalog-service/errors"
 	"auto-parts-catalog/catalog-service/mapping"
 	"auto-parts-catalog/catalog-service/storage"
 	"auto-parts-catalog/catalog-service/storage/postgres/queries"
@@ -24,11 +23,11 @@ func pgToStorageCountry(country queries.Country) storage.Country {
 }
 
 func mapCountryQueryResult(country queries.Country, err error) (storage.Country, error) {
-	return pgToStorageCountry(country), errors.PgToStorageErr(err)
+	return pgToStorageCountry(country), PgToStorageErr(err)
 }
 
 func mapCountryQueryResults(countries []queries.Country, err error) ([]storage.Country, error) {
-	return mapping.Map(countries, pgToStorageCountry), errors.PgToStorageErr(err)
+	return mapping.Map(countries, pgToStorageCountry), PgToStorageErr(err)
 }
 
 func (s *CountryStorage) CreateCountry(ctx context.Context, name string) (storage.Country, error) {
@@ -48,5 +47,5 @@ func (s *CountryStorage) ListCountries(ctx context.Context) ([]storage.Country, 
 
 func (s *CountryStorage) DeleteCountry(ctx context.Context, id int32) error {
 	err := s.queries.DeleteCountry(ctx, id)
-	return errors.PgToStorageErr(err)
+	return PgToStorageErr(err)
 }
